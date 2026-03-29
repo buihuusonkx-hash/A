@@ -848,10 +848,10 @@ function ExamContent({ exam }: { exam: any[] }) {
             <span className="bg-slate-900 text-white px-3 py-1 rounded-lg text-xs">PHẦN I</span>
             Câu trắc nghiệm nhiều phương án lựa chọn. <span className="text-xs font-normal text-slate-400">({p1.length} câu)</span>
           </h4>
-          {p1.map(q => (
+          {p1.map((q, i) => (
             <div key={q.stt} className="mb-6 group">
               <p className="text-sm leading-relaxed mb-2">
-                <strong>Câu {q.stt}.</strong> {q.noiDung}
+                <strong>Câu {i + 1}.</strong> {q.noiDung}
                 <span className="ml-2 text-[10px] text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity">
                   [{q.bai} - {q.mucDo}]
                 </span>
@@ -881,9 +881,9 @@ function ExamContent({ exam }: { exam: any[] }) {
             <span className="bg-slate-900 text-white px-3 py-1 rounded-lg text-xs">PHẦN II</span>
             Câu trắc nghiệm đúng sai. <span className="text-xs font-normal text-slate-400">({p2.length} câu)</span>
           </h4>
-          {p2.map(q => (
+          {p2.map((q, i) => (
             <div key={q.stt} className="mb-8 p-4 bg-slate-50/50 rounded-2xl border border-slate-100">
-              <p className="text-sm font-bold mb-3">Câu {q.stt}. {q.context}</p>
+              <p className="text-sm font-bold mb-3">Câu {i + 1}. {q.context}</p>
               {q.image && <img src={q.image} alt="minh họa" className="max-w-xs mx-auto my-4 rounded shadow-sm" />}
               <div className="space-y-2">
                 {q.statements?.map((s: any, i: number) => (
@@ -909,9 +909,9 @@ function ExamContent({ exam }: { exam: any[] }) {
             Câu trắc nghiệm trả lời ngắn. <span className="text-xs font-normal text-slate-400">({p3.length} câu)</span>
           </h4>
           <div className="grid grid-cols-1 gap-6">
-            {p3.map(q => (
+            {p3.map((q, i) => (
               <div key={q.stt} className="question-card">
-                <p className="text-sm"><strong>Câu {q.stt}.</strong> {q.noiDung}
+                <p className="text-sm"><strong>Câu {i + 1}.</strong> {q.noiDung}
                   <span className="text-[9px] text-slate-400 ml-2">({q.mucDo})</span>
                 </p>
                 {q.image && <img src={q.image} alt="minh họa" className="max-w-xs my-3 rounded shadow-sm" />}

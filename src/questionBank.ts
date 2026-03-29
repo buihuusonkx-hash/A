@@ -1239,11 +1239,69 @@ export const QUESTION_BANK: QuestionBank = {
 // ============================================================
 
 /**
+ * Tìm topic phù hợp nhất trong QUESTION_BANK dựa trên tên bài học.
+ * Ưu tiên: exact match > chứa lẫn nhau > fallback ngẫu nhiên.
+ */
+function findBestTopic(noiDung: string, fallbackTopics: string[]): TopicBank | undefined {
+  if (!noiDung) return QUESTION_BANK[fallbackTopics[Math.floor(Math.random() * fallbackTopics.length)]];
+
+  // 1. Exact match
+  if (QUESTION_BANK[noiDung]) return QUESTION_BANK[noiDung];
+
+  // 2. Normalize input
+  const input = noiDung.toLowerCase().trim();
+  const bankKeys = Object.keys(QUESTION_BANK);
+
+  // 3. Tìm key chứa input hoặc input chứa key (fuzzy match)
+  let bestKey = '';
+  let bestScore = 0;
+
+  for (const key of bankKeys) {
+    const keyLower = key.toLowerCase();
+
+    // Exact match lowercase
+    if (keyLower === input) { bestKey = key; bestScore = 1000; break; }
+
+    // Input chứa key (VD: "Tính đơn điệu của hàm số" chứa "hàm số")
+    if (input.includes(keyLower)) {
+      const score = keyLower.length * 2; // Ưu tiên key dài hơn
+      if (score > bestScore) { bestKey = key; bestScore = score; }
+    }
+
+    // Key chứa input (VD: "Nguyên hàm - Tích phân" chứa "tích phân")
+    if (keyLower.includes(input)) {
+      const score = input.length;
+      if (score > bestScore) { bestKey = key; bestScore = score; }
+    }
+
+    // Tách từ và đếm số từ trùng
+    const inputWords = input.split(/[\s\-–,;.]+/).filter(w => w.length > 1);
+    const keyWords = keyLower.split(/[\s\-–,;.]+/).filter(w => w.length > 1);
+    const commonWords = inputWords.filter(w => keyWords.some(kw => kw.includes(w) || w.includes(kw)));
+    if (commonWords.length > 0) {
+      const score = commonWords.length * 3 + commonWords.join('').length;
+      if (score > bestScore) { bestKey = key; bestScore = score; }
+    }
+  }
+
+  if (bestKey && bestScore > 0) return QUESTION_BANK[bestKey];
+
+  // 4. Fallback: chọn ngẫu nhiên từ danh sách fallback
+  const validFallbacks = fallbackTopics.filter(t => QUESTION_BANK[t]);
+  if (validFallbacks.length > 0) {
+    return QUESTION_BANK[validFallbacks[Math.floor(Math.random() * validFallbacks.length)]];
+  }
+
+  // 5. Cuối cùng: lấy topic đầu tiên có trong bank
+  return QUESTION_BANK[bankKeys[0]];
+}
+
+/**
  * Lấy câu hỏi NLC ngẫu nhiên theo chủ đề và mức độ
  */
 export function pickNLCQuestion(noiDung: string, mucDo: string): NLCQuestion {
   const fallbackTopics = ["Hàm số", "Nguyên hàm - Tích phân", "Xác suất", "Hàm số mũ - Hàm số Logarit", "Phương trình - Bất phương trình mũ và logarit", "Giới hạn hàm số", "Xác suất có điều kiện", "Thống kê", "Tổ hợp - Xác suất"];
-  const bankEntry = QUESTION_BANK[noiDung] || QUESTION_BANK[fallbackTopics[Math.floor(Math.random() * fallbackTopics.length)]];
+  const bankEntry = findBestTopic(noiDung, fallbackTopics);
   const levels = bankEntry?.nlc || {};
   const rawPool = levels[mucDo] || levels["Nhận biết"] || [];
   const pool = shuffle(rawPool).map(toNLC);
@@ -1258,11 +1316,7 @@ export function pickNLCQuestion(noiDung: string, mucDo: string): NLCQuestion {
  */
 export function pickDSQuestion(noiDung: string): DSQuestion {
   const fallbackTopics = ["Hàm số", "Nguyên hàm - Tích phân", "Xác suất", "Xác suất có điều kiện", "Tích phân ứng dụng", "Phương trình - Bất phương trình mũ và logarit", "Đường thẳng và mặt phẳng trong không gian", "Thống kê", "Tổ hợp - Xác suất", "Toán thực tế", "Hệ phương trình"];
-  const bankEntry =
-    QUESTION_BANK[noiDung] ||
-    QUESTION_BANK[
-      fallbackTopics[Math.floor(Math.random() * fallbackTopics.length)]
-    ];
+  const bankEntry = findBestTopic(noiDung, fallbackTopics);
   const pool = bankEntry?.ds || [];
   if (pool.length === 0) {
     return {
@@ -1283,11 +1337,7 @@ export function pickDSQuestion(noiDung: string): DSQuestion {
  */
 export function pickTLNQuestion(noiDung: string, mucDo: string): TLNQuestion {
   const fallbackTopics = ["Hàm số", "Nguyên hàm - Tích phân", "Xác suất", "Xác suất có điều kiện", "Tích phân ứng dụng", "Phương trình - Bất phương trình mũ và logarit", "Thống kê", "Tổ hợp - Xác suất", "Toán thực tế", "Hệ phương trình"];
-  const bankEntry =
-    QUESTION_BANK[noiDung] ||
-    QUESTION_BANK[
-      fallbackTopics[Math.floor(Math.random() * fallbackTopics.length)]
-    ];
+  const bankEntry = findBestTopic(noiDung, fallbackTopics);
   const levels = bankEntry?.tln || {};
   const pool: TLNQuestion[] =
     levels[mucDo] || levels["Thông hiểu"] || [];
