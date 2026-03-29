@@ -1481,6 +1481,42 @@ export function resetUsedQuestions(): void {
   usedTLNIndices.clear();
 }
 
+// ============================================================
+// BỘ LỌC CÂU HỎI THỰC TẾ
+// ============================================================
+const PRACTICAL_KEYWORDS = [
+  // Vật lý / chuyển động
+  'xe', 'ô tô', 'vận tốc', 'quãng đường', 'hãm phanh', 'bóng', 'ném', 'rơi', 'viên đạn', 'máy bay', 'tàu', 'drone',
+  // Y tế / sinh học
+  'thuốc', 'nồng độ', 'vi khuẩn', 'virus', 'bệnh', 'tiêm', 'dược',
+  // Tài chính / kinh tế
+  'lãi suất', 'ngân hàng', 'đầu tư', 'gửi', 'triệu', 'doanh thu', 'chi phí', 'sản phẩm', 'sản xuất', 'lợi nhuận', 'giá',
+  // Xây dựng / đời sống
+  'nhà kho', 'bể', 'hồ bơi', 'bình', 'lon', 'xô', 'thùng', 'nón lá', 'kim tự tháp', 'đống cát', 'mảnh vườn', 'đất',
+  // Dân số / xã hội
+  'dân số', 'học sinh', 'lớp', 'giám thị', 'công nhân', 'xạ thủ', 'người',
+  // Công nghệ
+  'robot', 'vệ tinh', 'GPS', 'tín hiệu',
+  // Nước / tự nhiên
+  'nước', 'lũ', 'lưu lượng', 'nhiệt độ', 'lò nung',
+  // Điện
+  'điện', 'mạch', 'tổng trở',
+  // Đo lường thực tế  
+  'cm', 'mét', 'm²', 'm³', 'km', 'lít', 'kg', 'tấn', 'giờ', 'phút', 'giây'
+];
+
+/** Kiểm tra câu DS có phải thực tế không */
+function isPracticalDS(q: DSQuestion): boolean {
+  const text = q.context.toLowerCase();
+  return PRACTICAL_KEYWORDS.some(kw => text.includes(kw.toLowerCase()));
+}
+
+/** Kiểm tra câu TLN có phải thực tế không */
+function isPracticalTLN(q: TLNQuestion): boolean {
+  const text = q.text.toLowerCase();
+  return PRACTICAL_KEYWORDS.some(kw => text.includes(kw.toLowerCase()));
+}
+
 /**
  * Lấy câu hỏi NLC ngẫu nhiên theo chủ đề và mức độ
  */
@@ -1497,12 +1533,23 @@ export function pickNLCQuestion(noiDung: string, mucDo: string): NLCQuestion {
 }
 
 /**
- * Lấy câu hỏi Đúng/Sai ngẫu nhiên theo chủ đề — KHÔNG TRÙNG LẶP
+ * Lấy câu hỏi Đúng/Sai — ƯU TIÊN CÂU THỰC TẾ, không trùng lặp
  */
 export function pickDSQuestion(noiDung: string): DSQuestion {
   const fallbackTopics = ["Hàm số", "Nguyên hàm - Tích phân", "Xác suất", "Xác suất có điều kiện", "Tích phân ứng dụng", "Phương trình - Bất phương trình mũ và logarit", "Đường thẳng và mặt phẳng trong không gian", "Thống kê", "Tổ hợp - Xác suất", "Toán thực tế", "Hệ phương trình", "Khối đa diện", "Mặt cầu - Hình trụ - Hình nón", "Tính đơn điệu của hàm số", "Giới hạn hàm số", "Dãy số - Cấp số cộng - Cấp số nhân", "Bài toán thực tế tổng hợp", "Vectơ và các phép toán vectơ trong không gian", "Toạ độ của vectơ trong không gian"];
   const bankEntry = findBestTopic(noiDung, fallbackTopics);
-  const pool = bankEntry?.ds || [];
+  let pool = bankEntry?.ds || [];
+
+  // Nếu không tìm thấy topic, gom tất cả DS từ mọi topic
+  if (pool.length === 0) {
+    const allDS: DSQuestion[] = [];
+    for (const topicKey of Object.keys(QUESTION_BANK)) {
+      const topicDS = QUESTION_BANK[topicKey].ds || [];
+      allDS.push(...topicDS);
+    }
+    pool = allDS;
+  }
+
   if (pool.length === 0) {
     return {
       context: `Xét các mệnh đề sau liên quan đến ${noiDung}:`,
@@ -1515,41 +1562,60 @@ export function pickDSQuestion(noiDung: string): DSQuestion {
     };
   }
 
+  // ƯU TIÊN câu thực tế
+  const practicalPool = pool.filter(isPracticalDS);
+  const targetPool = practicalPool.length > 0 ? practicalPool : pool;
+
   // Tracking: chọn câu chưa dùng
   const key = noiDung || '__default__';
   if (!usedDSIndices.has(key)) usedDSIndices.set(key, new Set());
   const used = usedDSIndices.get(key)!;
   
   // Shuffle pool indices
-  const indices = shuffle(Array.from({ length: pool.length }, (_, i) => i));
+  const indices = shuffle(Array.from({ length: targetPool.length }, (_, i) => i));
   
   // Tìm câu chưa dùng
   for (const idx of indices) {
     if (!used.has(idx)) {
       used.add(idx);
-      return pool[idx];
+      return targetPool[idx];
     }
   }
   
-  // Nếu hết câu chưa dùng, reset và chọn lại
+  // Nếu hết câu practical chưa dùng, reset và chọn lại từ practical
   used.clear();
   const chosen = indices[0];
   used.add(chosen);
-  return pool[chosen];
+  return targetPool[chosen];
 }
 
 /**
- * Lấy câu hỏi TLN ngẫu nhiên theo chủ đề và mức độ — KHÔNG TRÙNG LẶP
+ * Lấy câu hỏi TLN — ƯU TIÊN CÂU THỰC TẾ, không trùng lặp
  */
 export function pickTLNQuestion(noiDung: string, mucDo: string): TLNQuestion {
   const fallbackTopics = ["Hàm số", "Nguyên hàm - Tích phân", "Xác suất", "Xác suất có điều kiện", "Tích phân ứng dụng", "Phương trình - Bất phương trình mũ và logarit", "Thống kê", "Tổ hợp - Xác suất", "Toán thực tế", "Hệ phương trình", "Khối đa diện", "Mặt cầu - Hình trụ - Hình nón", "Tính đơn điệu của hàm số", "Giới hạn hàm số", "Dãy số - Cấp số cộng - Cấp số nhân", "Bài toán thực tế tổng hợp", "Vectơ và các phép toán vectơ trong không gian", "Toạ độ của vectơ trong không gian"];
   const bankEntry = findBestTopic(noiDung, fallbackTopics);
   const levels = bankEntry?.tln || {};
-  const pool: TLNQuestion[] =
-    levels[mucDo] || levels["Thông hiểu"] || [];
+  let pool: TLNQuestion[] = levels[mucDo] || levels["Thông hiểu"] || [];
+
+  // Nếu không tìm thấy, gom tất cả TLN cùng mức từ mọi topic
+  if (pool.length === 0) {
+    const allTLN: TLNQuestion[] = [];
+    for (const topicKey of Object.keys(QUESTION_BANK)) {
+      const topicTLN = QUESTION_BANK[topicKey].tln || {};
+      const topicPool = topicTLN[mucDo] || topicTLN["Thông hiểu"] || [];
+      allTLN.push(...topicPool);
+    }
+    pool = allTLN;
+  }
+
   if (pool.length === 0) {
     return { text: `Câu hỏi trả lời ngắn về ${noiDung} mức ${mucDo}.`, answer: "..." };
   }
+
+  // ƯU TIÊN câu thực tế
+  const practicalPool = pool.filter(isPracticalTLN);
+  const targetPool = practicalPool.length > 0 ? practicalPool : pool;
 
   // Tracking: chọn câu chưa dùng
   const key = `${noiDung}__${mucDo}`;
@@ -1557,19 +1623,20 @@ export function pickTLNQuestion(noiDung: string, mucDo: string): TLNQuestion {
   const used = usedTLNIndices.get(key)!;
   
   // Shuffle pool indices
-  const indices = shuffle(Array.from({ length: pool.length }, (_, i) => i));
+  const indices = shuffle(Array.from({ length: targetPool.length }, (_, i) => i));
   
   // Tìm câu chưa dùng
   for (const idx of indices) {
     if (!used.has(idx)) {
       used.add(idx);
-      return pool[idx];
+      return targetPool[idx];
     }
   }
   
-  // Nếu hết câu chưa dùng, reset và chọn lại
+  // Nếu hết câu practical chưa dùng, reset và chọn lại
   used.clear();
   const chosen = indices[0];
   used.add(chosen);
-  return pool[chosen];
+  return targetPool[chosen];
 }
+

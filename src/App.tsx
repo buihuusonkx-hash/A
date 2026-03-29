@@ -773,33 +773,165 @@ function TabTaoDe({ data, countQuestions, onPrev, monHoc = 'Toán' }: any) {
     setExam([...part1_NLC, ...part2_DS, ...part3_TLN]);
   };
 
+  // Hàm tạo lại riêng phần TRẢ LỜI NGẮN (giữ nguyên Phần I, II)
+  const handleRegenerateTLN = () => {
+    if (exam.length === 0) return alert('Vui lòng tạo đề trước!');
+    
+    const part1 = exam.filter(q => q.phan === 'I');
+    const part2 = exam.filter(q => q.phan === 'II');
+    const newPart3: any[] = [];
+    let stt = part1.length + part2.length + 1;
+
+    data.forEach((chuong: any) => {
+      chuong.noiDungs.forEach((nd: any) => {
+        nd.mucDos.forEach((md: any, mIdx: number) => {
+          const numTLN = countQuestions(md.qs.tln);
+          const mucDoTen = LEVELS[mIdx].name;
+          for (let i = 0; i < numTLN; i++) {
+            const qTLN = pickTLNQuestion(nd.tenNoiDung, mucDoTen);
+            newPart3.push({
+              noiDung: qTLN.text,
+              dapAn: qTLN.answer,
+              image: qTLN.image,
+              phan: 'III',
+              chuong: chuong.tenChuong,
+              bai: nd.tenNoiDung,
+              mucDo: mucDoTen,
+              yeuCau: md.yeuCau,
+              stt: stt++
+            });
+          }
+        });
+      });
+    });
+
+    setExam([...part1, ...part2, ...newPart3]);
+  };
+
+  // Hàm tạo lại riêng phần ĐÚNG/SAI (giữ nguyên Phần I, III)
+  const handleRegenerateDS = () => {
+    if (exam.length === 0) return alert('Vui lòng tạo đề trước!');
+    
+    const part1 = exam.filter(q => q.phan === 'I');
+    const oldPart3 = exam.filter(q => q.phan === 'III');
+    const newPart2: any[] = [];
+    let stt = part1.length + 1;
+
+    data.forEach((chuong: any) => {
+      chuong.noiDungs.forEach((nd: any) => {
+        const numDS = countQuestions(nd.mucDos[0].qs.ds);
+        for (let i = 0; i < numDS; i++) {
+          const qDS = pickDSQuestion(nd.tenNoiDung);
+          newPart2.push({
+            ...qDS,
+            phan: 'II',
+            chuong: chuong.tenChuong,
+            bai: nd.tenNoiDung,
+            yeuCau: nd.mucDos[0].yeuCau,
+            stt: stt++
+          });
+        }
+      });
+    });
+
+    // Cập nhật lại STT cho phần III
+    const updatedPart3 = oldPart3.map((q, idx) => ({ ...q, stt: part1.length + newPart2.length + idx + 1 }));
+    setExam([...part1, ...newPart2, ...updatedPart3]);
+  };
+
+  // Hàm tạo lại riêng phần TRẮC NGHIỆM NLC (giữ nguyên Phần II, III)
+  const handleRegenerateNLC = () => {
+    if (exam.length === 0) return alert('Vui lòng tạo đề trước!');
+    
+    const oldPart2 = exam.filter(q => q.phan === 'II');
+    const oldPart3 = exam.filter(q => q.phan === 'III');
+    const newPart1: any[] = [];
+    let stt = 1;
+
+    data.forEach((chuong: any) => {
+      chuong.noiDungs.forEach((nd: any) => {
+        nd.mucDos.forEach((md: any, mIdx: number) => {
+          const numQ = countQuestions(md.qs.nlc);
+          const mucDoTen = LEVELS[mIdx].name;
+          for (let i = 0; i < numQ; i++) {
+            const q = pickNLCQuestion(nd.tenNoiDung, mucDoTen);
+            newPart1.push({
+              noiDung: q.text,
+              options: q.options,
+              dapAn: q.answer,
+              image: q.image,
+              phan: 'I',
+              chuong: chuong.tenChuong,
+              bai: nd.tenNoiDung,
+              mucDo: mucDoTen,
+              yeuCau: md.yeuCau,
+              stt: stt++
+            });
+          }
+        });
+      });
+    });
+
+    // Cập nhật lại STT cho phần II và III
+    const updatedPart2 = oldPart2.map((q, idx) => ({ ...q, stt: newPart1.length + idx + 1 }));
+    const updatedPart3 = oldPart3.map((q, idx) => ({ ...q, stt: newPart1.length + updatedPart2.length + idx + 1 }));
+    setExam([...newPart1, ...updatedPart2, ...updatedPart3]);
+  };
+
   return (
     <div className="space-y-6" ref={mathRef as RefObject<HTMLDivElement>}>
       {/* Header điều khiển */}
-      <div className="bg-white p-8 rounded-3xl border border-slate-200 flex justify-between items-center shadow-lg">
-        <div>
-          <h2 className="text-xl font-black flex items-center gap-2">
-            <Sparkles className="text-indigo-600" />
-            Sinh đề từ Ma trận đặc tả
-          </h2>
-          <p className="text-xs text-slate-400 mt-1">
-            Câu hỏi được chọn lọc chính xác theo: {data.reduce((acc, c) => acc + c.noiDungs.length, 0)} đơn vị kiến thức đã thiết lập.
-          </p>
+      <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-lg">
+        <div className="flex justify-between items-center mb-4">
+          <div>
+            <h2 className="text-xl font-black flex items-center gap-2">
+              <Sparkles className="text-indigo-600" />
+              Sinh đề từ Ma trận đặc tả
+            </h2>
+            <p className="text-xs text-slate-400 mt-1">
+              Câu hỏi được chọn lọc chính xác theo: {data.reduce((acc, c) => acc + c.noiDungs.length, 0)} đơn vị kiến thức đã thiết lập.
+            </p>
+          </div>
+          <div className="flex gap-3">
+            <button
+              onClick={() => exportExamWord(exam, monHoc)}
+              className="px-4 py-2 bg-blue-600 text-white rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-blue-700 transition-all shadow-lg"
+            >
+              <Download className="w-4 h-4" /> Xuất Word
+            </button>
+            <button
+              onClick={handleGenerateExam}
+              className="bg-indigo-600 text-white px-8 py-3 rounded-xl font-black hover:bg-indigo-700 transition-all flex items-center gap-2 shadow-xl"
+            >
+              <RefreshCw className="w-5 h-5" /> TẠO ĐỀ THEO ĐẶC TẢ
+            </button>
+          </div>
         </div>
-        <div className="flex gap-3">
-          <button
-            onClick={() => exportExamWord(exam, monHoc)}
-            className="px-4 py-2 bg-blue-600 text-white rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-blue-700 transition-all shadow-lg"
-          >
-            <Download className="w-4 h-4" /> Xuất Word
-          </button>
-          <button
-            onClick={handleGenerateExam}
-            className="bg-indigo-600 text-white px-8 py-3 rounded-xl font-black hover:bg-indigo-700 transition-all flex items-center gap-2 shadow-xl"
-          >
-            <RefreshCw className="w-5 h-5" /> TẠO ĐỀ THEO ĐẶC TẢ
-          </button>
-        </div>
+
+        {/* Nút tạo lại riêng từng phần */}
+        {exam.length > 0 && (
+          <div className="flex flex-wrap gap-2 pt-3 border-t border-slate-100">
+            <span className="text-[10px] font-bold text-slate-400 uppercase self-center mr-2">Tạo lại riêng:</span>
+            <button
+              onClick={handleRegenerateNLC}
+              className="px-4 py-2 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl font-bold text-xs flex items-center gap-2 hover:bg-emerald-100 transition-all"
+            >
+              <RefreshCw className="w-3.5 h-3.5" /> Trắc nghiệm NLC (Phần I)
+            </button>
+            <button
+              onClick={handleRegenerateDS}
+              className="px-4 py-2 bg-amber-50 text-amber-700 border border-amber-200 rounded-xl font-bold text-xs flex items-center gap-2 hover:bg-amber-100 transition-all"
+            >
+              <RefreshCw className="w-3.5 h-3.5" /> Đúng/Sai (Phần II)
+            </button>
+            <button
+              onClick={handleRegenerateTLN}
+              className="px-4 py-2 bg-rose-50 text-rose-700 border border-rose-200 rounded-xl font-bold text-xs flex items-center gap-2 hover:bg-rose-100 transition-all"
+            >
+              <RefreshCw className="w-3.5 h-3.5" /> Trả lời ngắn (Phần III)
+            </button>
+          </div>
+        )}
       </div>
 
       <AnimatePresence>
