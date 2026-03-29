@@ -29,18 +29,25 @@ async function loadKatex(): Promise<KatexStatic | null> {
 // TIỆN ÍCH CHUNG
 // ============================================================
 
-/** Render LaTeX đồng bộ — dùng sau khi đã preload KaTeX */
+/**
+ * Render LaTeX đồng bộ — dùng output:'html' thay vì 'mathml'
+ * MathML chứa <annotation> với LaTeX gốc → Word render cả hai → bị lặp text
+ * HTML output không có annotation → Word hiển thị đúng
+ */
 function renderMathSync(text: string): string {
   if (!text) return text;
   const k = _katex;
-  if (!k) return text; // KaTeX chưa load: trả về LaTeX nguyên bản
+  if (!k) {
+    // KaTeX chưa load: strip dấu $ và giữ nguyên LaTeX text
+    return text.replace(/\$\$?([^$]+)\$\$?/g, (_m, latex) => latex.trim());
+  }
 
   let result = text.replace(/\$\$([^$]+)\$\$/g, (_, latex) => {
-    try { return k.renderToString(latex.trim(), { throwOnError: false, output: 'mathml', displayMode: true }); }
+    try { return k.renderToString(latex.trim(), { throwOnError: false, output: 'html', displayMode: true }); }
     catch { return `<em>${latex}</em>`; }
   });
   result = result.replace(/\$([^$\n]+)\$/g, (_, latex) => {
-    try { return k.renderToString(latex.trim(), { throwOnError: false, output: 'mathml', displayMode: false }); }
+    try { return k.renderToString(latex.trim(), { throwOnError: false, output: 'html', displayMode: false }); }
     catch { return `<em>${latex}</em>`; }
   });
   return result;
@@ -57,6 +64,7 @@ function downloadWordDoc(htmlBody: string, filename: string, title = '') {
 <meta charset="UTF-8">
 <meta name="ProgId" content="Word.Document">
 <meta name="Generator" content="Math Matrix Pro 2026">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
 <title>${title}</title>
 <style>
   @page {

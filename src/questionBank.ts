@@ -554,8 +554,8 @@ export const QUESTION_BANK: QuestionBank = {
         { text: "$P(A)=0,4; P(B)=0,3; P(A \\cap B)=0,1$. Tính $P(A|B)$:", options: ["$1/3$", "$1/4$", "$3/4$", "$0,12$"], answer: 'A' }
       ],
       "Vận dụng": [
-        "Một học sinh thi môn Toán hoặc Văn. XS đỗ Toán là $0{,}7$, XS đỗ Văn là $0{,}6$, XS đỗ cả hai là $0{,}5$. Tính XS đỗ Toán biết đã đỗ Văn.",
-        "Trong một hội đồng thi, 70% thí sinh nam và 30% nữ. XS nam đỗ là $0{,}8$, nữ đỗ là $0{,}9$. Một thí sinh được chọn ngẫu nhiên và đỗ. Tính XS người đó là nữ."
+        { text: "$P(Toán)=0{,}7$, $P(Văn)=0{,}6$, $P(T\\cap V)=0{,}5$. Tính $P(Toán|Văn)$:", options: ["$\\dfrac{5}{6}$", "$\\dfrac{5}{7}$", "$\\dfrac{7}{10}$", "$\\dfrac{1}{2}$"], answer: 'A' },
+        { text: "Hội đồng 70% nam, 30% nữ. XS nam đỗ 0,8; nữ đỗ 0,9. Một người đỗ, XS là nữ:", options: ["$\\dfrac{27}{83}$", "$\\dfrac{3}{10}$", "$\\dfrac{9}{10}$", "$\\dfrac{1}{3}$"], answer: 'A' }
       ]
     },
     ds: [
@@ -619,9 +619,9 @@ export const QUESTION_BANK: QuestionBank = {
         { text: "Tính $\\lim_{x \\to 0} \\dfrac{\\tan 3x}{x}$:", options: ["3", "1", "0", "$1/3$"], answer: 'A' }
       ],
       "Vận dụng": [
-        "Tính $\\lim_{x \\to 1} \\dfrac{x^3 - 1}{x^2 - 1}$.",
-        "Tìm $a$ để hàm số $f(x) = \\begin{cases} x^2 + a & x < 1 \\\\ 3x - 1 & x \\ge 1 \\end{cases}$ liên tục tại $x = 1$.",
-        "Tính $\\lim_{x \\to 0^+} x \\ln x$."
+        { text: "Tính $\\lim_{x \\to 1} \\dfrac{x^3 - 1}{x^2 - 1}$:", options: ["$\\dfrac{3}{2}$", "$1$", "$3$", "Không tồn tại"], answer: 'A' },
+        { text: "Tìm $a$ để $f(x) = \\begin{cases} x^2 + a & x < 1 \\\\ 3x - 1 & x \\ge 1 \\end{cases}$ liên tục tại $x = 1$:", options: ["$a = 1$", "$a = 0$", "$a = 2$", "$a = -1$"], answer: 'A' },
+        { text: "Giới hạn $\\lim_{x \\to 0^+} x \\ln x$ bằng:", options: ["$0$", "$1$", "$-\\infty$", "$+\\infty$"], answer: 'A' }
       ]
     },
     ds: [
@@ -676,9 +676,9 @@ export const QUESTION_BANK: QuestionBank = {
         { text: "Vật có $v(t) = t^2 - 2t$. Quãng đường trong $[0; 3]$ là:", options: ["$2,67$ m", "$2$ m", "$4$ m", "$3$ m"], answer: 'A' }
       ],
       "Vận dụng": [
-        "Tính diện tích hình phẳng giới hạn bởi $y = \\sin x$ và $y = \\cos x$ trên $\\left[0; \\dfrac{\\pi}{2}\\right]$.",
-        "Một bể bơi có thiết diện ngang là hình thang với đáy lớn $10$m, đáy nhỏ $6$m, chiều sâu $2$m và dài $25$m. Thể tích nước tối đa bể chứa là bao nhiêu?",
-        "Tính số diện tích $S$ giới hạn bởi $y = e^x$, $y = e^{-x}$ và $x = 1$."
+        { text: "Diện tích hình phẳng giới hạn $y = \\sin x$ và $y = \\cos x$ trên $\\left[0; \\dfrac{\\pi}{2}\\right]$ là:", options: ["$2(\\sqrt{2}-1)$", "$2$", "$\\sqrt{2}$", "$1$"], answer: 'A' },
+        { text: "Bể bơi hình thang ngang: đáy lớn $10$m, đáy nhỏ $6$m, sâu $2$m, dài $25$m. Thể tích là:", options: ["$400$ m³", "$300$ m³", "$500$ m³", "$200$ m³"], answer: 'A' },
+        { text: "Diện tích $S$ giới hạn bởi $y=e^x$, $y=e^{-x}$ và $x=1$ là:", options: ["$e - e^{-1} - 2 + 2 = e - \\frac{1}{e}$", "$e + e^{-1}$", "$2(e-1)$", "$e^2 - 1$"], answer: 'A' }
       ]
     },
     ds: [
@@ -795,9 +795,9 @@ export const QUESTION_BANK: QuestionBank = {
   "Đường thẳng và mặt phẳng trong không gian": {
     nlc: {
       "Nhận biết": [
-        "Vectơ pháp tuyến của mặt phẳng $2x - y + 3z - 5 = 0$ là vectơ nào?",
-        "Phương trình mặt phẳng đi qua $A(1;0;0)$, $B(0;2;0)$, $C(0;0;3)$ là?",
-        "Khoảng cách từ điểm $M(1;2;3)$ đến mặt phẳng $Oxy$ bằng bao nhiêu?"
+        { text: "Vectơ pháp tuyến của mặt phẳng $2x - y + 3z - 5 = 0$ là:", options: ["$(2; -1; 3)$", "$(2; 1; 3)$", "$(-2; 1; -3)$", "$(5; 0; 0)$"], answer: 'A' },
+        { text: "Mặt phẳng qua $A(1;0;0)$, $B(0;2;0)$, $C(0;0;3)$ có phương trình:", options: ["$\\dfrac{x}{1}+\\dfrac{y}{2}+\\dfrac{z}{3}=1$", "$x+y+z=1$", "$2x+y+z=1$", "$x+2y+3z=6$"], answer: 'A' },
+        { text: "Khoảng cách từ $M(1;2;3)$ đến mặt phẳng $Oxy$ bằng:", options: ["$3$", "$1$", "$2$", "$\\sqrt{14}$"], answer: 'A' }
       ],
       "Thông hiểu": [
         "Viết phương trình mặt phẳng đi qua $M(1;-1;2)$ và vuông góc với đường thẳng $\\dfrac{x-1}{2} = \\dfrac{y+1}{-1} = \\dfrac{z}{3}$.",
@@ -851,18 +851,18 @@ export const QUESTION_BANK: QuestionBank = {
   "Thống kê": {
     nlc: {
       "Nhận biết": [
-        "Số trung bình cộng của mẫu số liệu $\\{2; 4; 6; 8; 10\\}$ bằng bao nhiêu?",
-        "Trung vị của mẫu số liệu $\\{1; 3; 5; 7; 9\\}$ bằng bao nhiêu?",
-        "Phương sai của mẫu số liệu $\\{2; 2; 2; 2\\}$ bằng bao nhiêu?"
+        { text: "Số trung bình cộng của mẫu $\\{2; 4; 6; 8; 10\\}$ bằng:", options: ["6", "5", "7", "4"], answer: 'A' },
+        { text: "Trung vị của mẫu $\\{1; 3; 5; 7; 9\\}$ bằng:", options: ["5", "4", "6", "3"], answer: 'A' },
+        { text: "Phương sai của mẫu $\\{2; 2; 2; 2\\}$ bằng:", options: ["0", "2", "4", "1"], answer: 'A' }
       ],
       "Thông hiểu": [
-        "Mẫu số liệu có $n = 20$ giá trị. Nếu mỗi giá trị tăng thêm $5$ thì trung bình cộng thay đổi như thế nào?",
-        "Cho mẫu số liệu ghép nhóm có bảng tần số. Xác định lớp chứa trung vị.",
-        "Độ lệch chuẩn của mẫu số liệu $\\{3; 3; 7; 7\\}$ bằng bao nhiêu?"
+        { text: "Mẫu $n=20$ giá trị; mỗi giá trị tăng thêm $5$. Trung bình cộng:", options: ["Tăng thêm 5", "Không thay đổi", "Tăng gấp đôi", "Giảm 5"], answer: 'A' },
+        { text: "Độ lệch chuẩn của mẫu $\\{3; 3; 7; 7\\}$ bằng:", options: ["2", "4", "5", "$\\sqrt{5}$"], answer: 'A' },
+        { text: "Khoảng tứ phân vị $\\Delta Q = Q_3 - Q_1$ đo lường:", options: ["Mức phân tán của 50% dữ liệu giữa", "Giá trị trung bình", "Tổng dữ liệu", "Giá trị lớn nhất"], answer: 'A' }
       ],
       "Vận dụng": [
-        "Điểm thi của 30 học sinh được thống kê. Tính điểm trung bình, phương sai và nhận xét mức độ phân tán.",
-        "Khoảng tứ phân vị của mẫu số liệu ghép nhóm cho biết điều gì về phân phối dữ liệu?"
+        { text: "Mẫu ghép nhóm: $[4;6)$: 8 HS; $[6;7)$: 12 HS; $[7;8)$: 10 HS; $[8;10]$: 10 HS (40 HS). Lớp chứa trung vị là:", options: ["$[7;8)$", "$[6;7)$", "$[4;6)$", "$[8;10]$"], answer: 'A' },
+        { text: "Lớp A: điểm TB 7,2; $s=1{,}1$. Lớp B: điểm TB 7,2; $s=0{,}5$. Lớp nào đồng đều hơn?", options: ["Lớp B", "Lớp A", "Như nhau", "Không xác định"], answer: 'A' }
       ]
     },
     ds: [
@@ -906,18 +906,18 @@ export const QUESTION_BANK: QuestionBank = {
   "Tổ hợp - Xác suất": {
     nlc: {
       "Nhận biết": [
-        "Số hoán vị của $5$ phần tử là bao nhiêu?",
-        "$C_{10}^3$ bằng bao nhiêu?",
-        "Số chỉnh hợp chập $3$ của $6$ phần tử $A_6^3$ bằng bao nhiêu?"
+        { text: "Số hoán vị của $5$ phần tử là:", options: ["120", "60", "20", "24"], answer: 'A' },
+        { text: "$C_{10}^3$ bằng:", options: ["120", "720", "30", "210"], answer: 'A' },
+        { text: "Chỉnh hợp chập $3$ của $6$ phần tử $A_6^3$ bằng:", options: ["120", "20", "216", "36"], answer: 'A' }
       ],
       "Thông hiểu": [
-        "Từ $5$ chữ số $\\{1,2,3,4,5\\}$, lập số tự nhiên gồm $3$ chữ số khác nhau. Có bao nhiêu số như vậy?",
-        "Một tổ có $3$ nam và $4$ nữ. Chọn $2$ người đại diện. Có bao nhiêu cách chọn có ít nhất $1$ nữ?",
-        "Từ các chữ cái của từ \"TOÁN\", lập được bao nhiêu từ gồm $3$ chữ cái khác nhau?"
+        { text: "Từ $\\{1,2,3,4,5\\}$, lập số tự nhiên $3$ chữ số khác nhau. Số lượng là:", options: ["60", "120", "30", "125"], answer: 'A' },
+        { text: "Tổ $3$ nam $4$ nữ, chọn $2$ đại diện có ít nhất $1$ nữ:", options: ["18", "21", "12", "6"], answer: 'A' },
+        { text: "$8$ đội thi vòng tròn (mỗi cặp gặp $1$ lần). Tổng số trận:", options: ["28", "56", "16", "64"], answer: 'A' }
       ],
       "Vận dụng": [
-        "Có $8$ đội bóng thi đấu vòng tròn (mỗi cặp gặp nhau đúng $1$ lần). Tổng số trận đấu là bao nhiêu?",
-        "Trong lớp có $15$ học sinh giỏi Toán, $10$ học sinh giỏi Văn, $5$ giỏi cả hai. Chọn $1$ học sinh giỏi Toán hoặc Văn. Có bao nhiêu cách?"
+        { text: "Có $15$ HS giỏi Toán, $10$ HS giỏi Văn, $5$ giỏi cả hai. Số HS chỉ giỏi Toán hoặc Văn (không phải cả hai) là:", options: ["15", "20", "25", "10"], answer: 'A' },
+        { text: "Từ $10$ người chọn $3$ thành viên BCH (chủ tịch, phó, thư ký). Số cách là:", options: ["720", "120", "360", "210"], answer: 'A' }
       ]
     },
     ds: [
@@ -962,18 +962,18 @@ export const QUESTION_BANK: QuestionBank = {
   "Toán thực tế": {
     nlc: {
       "Nhận biết": [
-        "Một cửa hàng giảm giá $20\\%$. Giá gốc $500.000$đ, giá sau giảm là bao nhiêu?",
-        "Lãi suất ngân hàng $6\\%$/năm. Gửi $10$ triệu, sau $1$ năm lãi đơn thu được bao nhiêu?",
-        "Một vật thả từ độ cao $h$ (m). Thời gian rơi $t$ giây thỏa $h = 5t^2$. Từ $45$m, vật rơi mất bao nhiêu giây?"
+        { text: "Cửa hàng giảm $20\\%$. Giá gốc $500.000$đ. Giá sau giảm là:", options: ["$400.000$đ", "$450.000$đ", "$480.000$đ", "$420.000$đ"], answer: 'A' },
+        { text: "Lãi suất $6\\%$/năm. Gửi $10$ triệu, sau $1$ năm lãi đơn thu được:", options: ["$600.000$đ", "$60.000$đ", "$6.000.000$đ", "$1.000.000$đ"], answer: 'A' },
+        { text: "Vật rơi từ $45$m với $h = 5t^2$. Thời gian rơi là:", options: ["$3$ giây", "$9$ giây", "$5$ giây", "$\\sqrt{5}$ giây"], answer: 'A' }
       ],
       "Thông hiểu": [
-        "Doanh thu công ty tháng 1 là $100$ triệu đồng, tăng $5\\%$ mỗi tháng. Tính doanh thu tháng 4.",
-        "Khoảnh đất hình chữ nhật có chu vi $120$m. Chiều dài hơn chiều rộng $20$m. Tính diện tích khoảnh đất.",
-        "Xe máy đi từ A đến B với vận tốc $50$km/h mất $2$ giờ. Nếu tăng vận tốc lên $60$km/h thì mất bao nhiêu phút?"
+        { text: "Doanh thu tháng 1: $100$ triệu, tăng $5\\%$/tháng. Doanh thu tháng 4 là:", options: ["$115{,}76$ triệu", "$115$ triệu", "$120$ triệu", "$110{,}25$ triệu"], answer: 'A' },
+        { text: "Đất hình chữ nhật chu vi $120$m, dài hơn rộng $20$m. Diện tích là:", options: ["$800$ m²", "$1600$ m²", "$900$ m²", "$700$ m²"], answer: 'A' },
+        { text: "Xe đi $50$km/h mất $2$ giờ. Tăng lên $60$km/h thì mất:", options: ["$100$ phút", "$90$ phút", "$80$ phút", "$120$ phút"], answer: 'A' }
       ],
       "Vận dụng": [
-        "Một xưởng sản xuất $n$ sản phẩm với chi phí $C(n) = 0{,}5n^2 + 20n + 500$ (nghìn đồng). Tìm số sản phẩm để chi phí trung bình nhỏ nhất.",
-        "Hộp đựng hình trụ không có nắp, thể tích $V = 2000\\pi$ cm³. Tìm bán kính để diện tích vật liệu làm hộp nhỏ nhất."
+        { text: "Chi phí $C(n) = 0{,}5n^2 + 20n + 500$. Chi phí trung bình nhỏ nhất khi $n$:", options: ["$n = \\sqrt{1000} \\approx 32$", "$n = 20$", "$n = 50$", "$n = 10$"], answer: 'A' },
+        { text: "Bình trụ không nắp thể tích $V = 2000\\pi$ cm³. Bán kính để diện tích nhỏ nhất là:", options: ["$r = 10$ cm", "$r = 20$ cm", "$r = 5$ cm", "$r = \\sqrt{1000}$ cm"], answer: 'A' }
       ]
     },
     ds: [
@@ -1093,13 +1093,13 @@ export const QUESTION_BANK: QuestionBank = {
         { text: "Hàm số $f(x)$ có $f'(x) = x(x-1)^2(x-2)$. Số điểm cực trị là:", options: ["2", "1", "3", "0"], answer: 'A' }
       ],
       "Vận dụng": [
-        "Tìm $m$ để hàm số $y = x^3 - 3mx^2 + 3(m^2-1)x + 1$ đồng biến trên $\\mathbb{R}$.",
-        "Hàm số $y = 2\\sin x - x$ đạt giá trị lớn nhất trên $[0; \\pi/2]$ tại điểm nào?",
-        "Cho $f(x) = x^3 + ax^2 + bx + c$ có đồ thị như hình. Xác định khoảng đồng biến, nghịch biến."
+        { text: "Tìm $m$ để hàm số $y = x^3 - 3mx^2 + 3(m^2-1)x + 1$ đồng biến trên $\\mathbb{R}$:", options: ["$m \\in [-1; 1]$", "$m > 1$", "$m < -1$", "$m = 0$"], answer: 'A' },
+        { text: "Hàm số $y = 2\\sin x - x$ đạt giá trị lớn nhất trên $[0; \\pi/2]$ tại:", options: ["$x = \\pi/3$", "$x = 0$", "$x = \\pi/2$", "$x = \\pi/6$"], answer: 'A' },
+        { text: "Hàm số $y = x^3 - 3x^2 - 9x + 1$ đồng biến trên khoảng nào?", options: ["$(-\\infty; -1)$ và $(3; +\\infty)$", "$(-1; 3)$", "$(0; +\\infty)$", "$(-\\infty; 0)$"], answer: 'A' }
       ],
       "Vận dụng cao": [
-        "Tìm tất cả giá trị $m$ để hàm $y = \\dfrac{x^2 + mx + 1}{x+m}$ đồng biến trên $(0; +\\infty)$.",
-        "Chứng minh $f(x) = \\sin x - \\dfrac{x}{1+x^2}$ đồng biến trên $\\mathbb{R}$."
+        { text: "Tìm giá trị $m$ để hàm $y = \\dfrac{x^2 + mx + 1}{x+m}$ đồng biến trên $(0; +\\infty)$:", options: ["$m \\geq 1$", "$m \\leq -1$", "$m = 0$", "$m \\in [-1; 1]$"], answer: 'A' },
+        { text: "Hàm $f(x) = \\sin x - \\dfrac{x}{1+x^2}$ thỏa mãn $f'(x)$ bằng:", options: ["$\\cos x - \\dfrac{1-x^2}{(1+x^2)^2}$", "$\\cos x + \\dfrac{1}{(1+x^2)^2}$", "$-\\sin x + \\dfrac{1}{1+x^2}$", "$\\cos x - \\dfrac{1}{1+x^2}$"], answer: 'A' }
       ]
     },
     ds: [
