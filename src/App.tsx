@@ -1048,13 +1048,14 @@ function Header({ monHoc, setMonHoc }: any) {
         <p className="text-indigo-600 font-black tracking-widest text-[9px] uppercase">Công cụ Giáo dục Thông minh năm 2026</p>
       </motion.div>
       
-      <h1 className="text-5xl font-black text-slate-900 italic tracking-tighter mb-6">
+      <h1 className="text-5xl font-black text-slate-900 italic tracking-tighter mb-2">
         Ma trận Toán học. <span className="text-indigo-600 relative">Pro
           <svg className="absolute -bottom-2 left-0 w-full h-2 text-indigo-200" viewBox="0 0 100 10" preserveAspectRatio="none">
             <path d="M0 5 Q 25 0 50 5 T 100 5" fill="none" stroke="currentColor" strokeWidth="4" />
           </svg>
         </span>
       </h1>
+      <p className="text-sm font-bold text-red-600 mb-6">Thiết kế bởi GV Bùi Thị Kiên</p>
 
       <div className="flex justify-center items-center gap-4">
         <div className="bg-white p-1 rounded-xl border border-slate-200 shadow-sm flex gap-1">

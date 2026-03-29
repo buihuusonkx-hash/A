@@ -30,10 +30,18 @@ async function loadKatex(): Promise<KatexStatic | null> {
 // ============================================================
 
 /**
- * Render LaTeX đồng bộ — dùng output:'html' thay vì 'mathml'
- * MathML chứa <annotation> với LaTeX gốc → Word render cả hai → bị lặp text
- * HTML output không có annotation → Word hiển thị đúng
+ * Render LaTeX → MathML cho Word.
+ * Word hỗ trợ MathML native (hiển thị như MathType).
+ * Cần strip <annotation> (chứa LaTeX gốc) → tránh Word render lặp text.
  */
+function stripAnnotation(mathml: string): string {
+  // Loại bỏ <annotation ...>...</annotation> và <semantics> wrapper
+  return mathml
+    .replace(/<annotation[^>]*>[\s\S]*?<\/annotation>/gi, '')
+    .replace(/<semantics>/gi, '')
+    .replace(/<\/semantics>/gi, '');
+}
+
 function renderMathSync(text: string): string {
   if (!text) return text;
   const k = _katex;
@@ -42,14 +50,24 @@ function renderMathSync(text: string): string {
     return text.replace(/\$\$?([^$]+)\$\$?/g, (_m, latex) => latex.trim());
   }
 
+  // Display mode: $$...$$
   let result = text.replace(/\$\$([^$]+)\$\$/g, (_, latex) => {
-    try { return k.renderToString(latex.trim(), { throwOnError: false, output: 'html', displayMode: true }); }
+    try {
+      const mathml = k.renderToString(latex.trim(), { throwOnError: false, output: 'mathml', displayMode: true });
+      return stripAnnotation(mathml);
+    }
     catch { return `<em>${latex}</em>`; }
   });
+
+  // Inline mode: $...$
   result = result.replace(/\$([^$\n]+)\$/g, (_, latex) => {
-    try { return k.renderToString(latex.trim(), { throwOnError: false, output: 'html', displayMode: false }); }
+    try {
+      const mathml = k.renderToString(latex.trim(), { throwOnError: false, output: 'mathml', displayMode: false });
+      return stripAnnotation(mathml);
+    }
     catch { return `<em>${latex}</em>`; }
   });
+
   return result;
 }
 
@@ -59,12 +77,37 @@ function downloadWordDoc(htmlBody: string, filename: string, title = '') {
 <html xmlns:o="urn:schemas-microsoft-com:office:office"
       xmlns:w="urn:schemas-microsoft-com:office:word"
       xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+      xmlns:mml="http://www.w3.org/1998/Math/MathML"
       xmlns="http://www.w3.org/TR/REC-html40">
 <head>
 <meta charset="UTF-8">
 <meta name="ProgId" content="Word.Document">
 <meta name="Generator" content="Math Matrix Pro 2026">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+<!--[if gte mso 9]>
+<xml>
+  <w:WordDocument>
+    <w:View>Print</w:View>
+    <w:Zoom>100</w:Zoom>
+    <w:DoNotOptimizeForBrowser/>
+  </w:WordDocument>
+  <o:OfficeDocumentSettings>
+    <o:AllowPNG/>
+  </o:OfficeDocumentSettings>
+  <m:mathPr>
+    <m:mathFont m:val="Cambria Math"/>
+    <m:brkBin m:val="before"/>
+    <m:brkBinSub m:val="--"/>
+    <m:smallFrac m:val="off"/>
+    <m:dispDef/>
+    <m:lMargin m:val="0"/>
+    <m:rMargin m:val="0"/>
+    <m:defJc m:val="centerGroup"/>
+    <m:wrapIndent m:val="1440"/>
+    <m:intLim m:val="subSup"/>
+    <m:naryLim m:val="undOvr"/>
+  </m:mathPr>
+</xml>
+<![endif]-->
 <title>${title}</title>
 <style>
   @page {
@@ -172,7 +215,12 @@ function downloadWordDoc(htmlBody: string, filename: string, title = '') {
 
   .footer-end { text-align: center; margin-top: 20pt; font-weight: bold; font-style: italic; }
 
-  /* KaTeX MathML — Word renders natively, no CSS needed */
+  /* MathML — Word renders natively as equation objects */
+  math, mml\\:math {
+    font-family: 'Cambria Math', 'Times New Roman', serif;
+    font-size: 13pt;
+    vertical-align: middle;
+  }
 </style>
 </head>
 <body>

@@ -108,18 +108,38 @@ export const QUESTION_BANK: QuestionBank = {
           { text: "Hàm số đồng biến trên khoảng $(0; +\\infty)$.", answer: "Đúng" },
           { text: "Đồ thị hàm số có trục đối xứng là trục $Ox$.", answer: "Sai" }
         ]
+      },
+      {
+        context: "Một quả bóng được ném lên từ mặt đất với chiều cao $h(t) = -5t^2 + 20t$ (mét, $t$ tính bằng giây). Xét các mệnh đề sau:",
+        statements: [
+          { text: "Vận tốc của quả bóng là $v(t) = h'(t) = -10t + 20$ (m/s).", answer: "Đúng" },
+          { text: "Quả bóng đạt chiều cao lớn nhất tại thời điểm $t = 2$ giây.", answer: "Đúng" },
+          { text: "Chiều cao lớn nhất mà quả bóng đạt được là $20$ mét.", answer: "Đúng" },
+          { text: "Quả bóng rơi trở lại mặt đất sau $5$ giây.", answer: "Sai" }
+        ]
+      },
+      {
+        context: "Lượng thuốc trong máu bệnh nhân sau $t$ giờ uống thuốc được mô tả bởi hàm $C(t) = \\dfrac{4t}{t^2 + 1}$ (mg/lít). Xét các mệnh đề sau:",
+        statements: [
+          { text: "Nồng độ thuốc tại $t = 0$ bằng $0$ mg/lít.", answer: "Đúng" },
+          { text: "$C'(t) = \\dfrac{4(1 - t^2)}{(t^2 + 1)^2}$, nên nồng độ đạt cực đại tại $t = 1$ giờ.", answer: "Đúng" },
+          { text: "Nồng độ thuốc cực đại là $C(1) = 2$ mg/lít.", answer: "Đúng" },
+          { text: "Sau $3$ giờ, nồng độ thuốc tăng so với thời điểm $t = 1$ giờ.", answer: "Sai" }
+        ]
       }
     ],
     tln: {
       "Thông hiểu": [
         { text: "Tìm giá trị lớn nhất $M$ của hàm số $f(x) = -x^2 + 4x + 1$ trên đoạn $[0; 5]$. Tính $M$.", answer: "5", image: "/images/graph_parabola_max.png" },
         { text: "Tìm số điểm cực trị của hàm số $y = x^4 - 8x^2 + 3$.", answer: "3" },
-        { text: "Hàm số $y = \\dfrac{1}{3}x^3 - x^2 - 3x + 2$ đạt cực tiểu tại $x = a$. Tính $a$.", answer: "3" }
+        { text: "Hàm số $y = \\dfrac{1}{3}x^3 - x^2 - 3x + 2$ đạt cực tiểu tại $x = a$. Tính $a$.", answer: "3" },
+        { text: "Một viên đạn được bắn lên cao với chiều cao $h(t) = -4{,}9t^2 + 49t$ mét. Hỏi viên đạn đạt chiều cao lớn nhất bằng bao nhiêu mét?", answer: "$122{,}5$ m" }
       ],
       "Vận dụng": [
         { text: "Tìm tất cả giá trị nguyên của $m$ thuộc $[-5; 5]$ để hàm số $y = x^3 - 3x^2 + m$ có cực đại dương và cực tiểu âm.", answer: "3" },
         { text: "Cho hàm số $y = x^3 - 3mx + 1$ ($m > 0$). Để hàm số có cực trị thì $m$ phải thỏa mãn điều kiện gì? Tính giá trị nhỏ nhất của $m$.", answer: "m > 0" },
-        { text: "Tổng tất cả các giá trị nguyên của tham số $m$ trên đoạn $[-3;3]$ để hàm số $y = x^3 - 3x + m$ có giá trị lớn nhất trên $[-2;2]$ là $6$ bằng bao nhiêu?", answer: "4" }
+        { text: "Tổng tất cả các giá trị nguyên của tham số $m$ trên đoạn $[-3;3]$ để hàm số $y = x^3 - 3x + m$ có giá trị lớn nhất trên $[-2;2]$ là $6$ bằng bao nhiêu?", answer: "4" },
+        { text: "Chi phí sản xuất $x$ áo sơ mi là $C(x) = 0{,}01x^2 - 2x + 500$ (nghìn đồng). Tìm số áo để chi phí trung bình nhỏ nhất.", answer: "$x = \\sqrt{50000} \\approx 224$ áo" }
       ],
       "Vận dụng cao": [
         { text: "Có bao nhiêu giá trị nguyên của $m \\in [-10; 10]$ để phương trình $x^3 - 3x = m$ có 3 nghiệm phân biệt?", answer: "3" },
@@ -187,18 +207,38 @@ export const QUESTION_BANK: QuestionBank = {
           { text: "Diện tích hình $(H)$ bằng $\\int_0^1 (x - x^2)dx$.", answer: "Đúng" },
           { text: "Diện tích hình $(H)$ bằng $\\dfrac{1}{3}$.", answer: "Sai" }
         ]
+      },
+      {
+        context: "Nước chảy vào bể với tốc độ $v(t) = 6t - t^2$ (lít/phút, $0 \\le t \\le 6$). Xét các mệnh đề sau:",
+        statements: [
+          { text: "Tốc độ nước chảy lớn nhất tại $t = 3$ phút ($v(3) = 9$ lít/phút).", answer: "Đúng" },
+          { text: "Tổng lượng nước chảy vào bể trong $6$ phút là $\\int_0^6 (6t - t^2)dt = 36$ lít.", answer: "Đúng" },
+          { text: "Sau $3$ phút, lượng nước đã chảy vào bể là $\\int_0^3 (6t - t^2)dt = 18$ lít.", answer: "Đúng" },
+          { text: "Lượng nước chảy vào trong $3$ phút cuối nhiều hơn $3$ phút đầu.", answer: "Sai" }
+        ]
+      },
+      {
+        context: "Một ô tô tăng tốc từ trạng thái nghỉ với gia tốc $a(t) = 4 - t$ (m/s², $0 \\le t \\le 4$). Xét các mệnh đề:",
+        statements: [
+          { text: "Vận tốc tại thời điểm $t$ là $v(t) = \\int_0^t (4-s)ds = 4t - \\dfrac{t^2}{2}$.", answer: "Đúng" },
+          { text: "Vận tốc lớn nhất đạt tại $t = 4$ giây.", answer: "Đúng" },
+          { text: "Quãng đường đi được trong $4$ giây đầu là $\\int_0^4 \\left(4t - \\dfrac{t^2}{2}\\right)dt = \\dfrac{64}{3}$ mét.", answer: "Đúng" },
+          { text: "Quãng đường đi trong $2$ giây đầu bằng đúng nửa quãng đường $4$ giây.", answer: "Sai" }
+        ]
       }
     ],
     tln: {
       "Thông hiểu": [
         { text: "Tính $\\int_0^1 (2x^3 + 3x^2 - 1) dx$.", answer: "$\\frac{3}{2}$" },
         { text: "Diện tích hình phẳng giới hạn bởi $y = x^2$ và $y = 2x$ bằng bao nhiêu?", answer: "$\\frac{4}{3}$" },
-        { text: "Tính $F(x)$ biết $F'(x) = e^x - 1$ và $F(0) = 2$.", answer: "$e^x - x + 1$" }
+        { text: "Tính $F(x)$ biết $F'(x) = e^x - 1$ và $F(0) = 2$.", answer: "$e^x - x + 1$" },
+        { text: "Một hồ bơi hình chữ nhật dài $25$m, rộng $10$m, sâu tuyến tính từ $1$m đến $3$m. Tính thể tích nước khi đầy (dùng tích phân).", answer: "$500$ m³" }
       ],
       "Vận dụng": [
         { text: "Một vật chuyển động với gia tốc $a(t) = 6t - 2$ (m/s²). Biết $v(0) = 3$ m/s. Vận tốc của vật lúc $t = 2$ giây là bao nhiêu?", answer: "11 m/s" },
         { text: "Tính thể tích khối tròn xoay sinh ra khi quay hình phẳng giới hạn bởi $y = x^2$, trục hoành và đường $x = 2$ xung quanh trục $Ox$.", answer: "$\\frac{32\\pi}{5}$" },
-        { text: "Tính $\\int_0^{\\pi} x\\sin x\\, dx$.", answer: "$\\pi$" }
+        { text: "Tính $\\int_0^{\\pi} x\\sin x\\, dx$.", answer: "$\\pi$" },
+        { text: "Lũ lụt chảy qua đập với lưu lượng $Q(t) = 200t\\,e^{-0{,}5t}$ (m³/phút). Tổng lượng nước trong $10$ phút đầu xấp xỉ bao nhiêu m³?", answer: "$\\approx 786$ m³" }
       ],
       "Vận dụng cao": [
         { text: "Cho hàm $f(x)$ liên tục và $f(x) + f(1-x) = 1$. Tính $I = \\int_0^1 f(x)dx$.", answer: "$\\frac{1}{2}$" },
@@ -252,11 +292,13 @@ export const QUESTION_BANK: QuestionBank = {
       "Thông hiểu": [
         { text: "Tính mô-đun của số phức $z = (1 + i)^4$.", answer: "4" },
         { text: "Tìm phần thực của số phức $z = \\dfrac{3 + 4i}{2 - i}$.", answer: "$\\frac{2}{5}$" },
-        { text: "Số phức $z = a + bi$ thỏa mãn $z + \\bar{z} = 4$ và $z \\cdot \\bar{z} = 13$. Tính $|b|$.", answer: "3" }
+        { text: "Số phức $z = a + bi$ thỏa mãn $z + \\bar{z} = 4$ và $z \\cdot \\bar{z} = 13$. Tính $|b|$.", answer: "3" },
+        { text: "Trong kỹ thuật điện, điện trở phức $Z = 3 + 4i$ ($\\Omega$). Tính tổng trở $|Z|$.", answer: "$5$ $\\Omega$" }
       ],
       "Vận dụng": [
         { text: "Cho $z = \\cos\\theta + i\\sin\\theta$. Tính $|z^n|$ với mọi $n \\in \\mathbb{N}^*$.", answer: "1" },
-        { text: "Tìm tổng tất cả các giá trị thực của $m$ để $z = \\dfrac{m+1}{m-2} + (m^2-4)i$ là số thực.", answer: "2" }
+        { text: "Tìm tổng tất cả các giá trị thực của $m$ để $z = \\dfrac{m+1}{m-2} + (m^2-4)i$ là số thực.", answer: "2" },
+        { text: "Mạch điện xoay chiều có $Z_1 = 5 + 2i$ và $Z_2 = 3 - i$ mắc nối tiếp. Tính tổng trở $|Z_1 + Z_2|$.", answer: "$\\sqrt{65}$ $\\Omega$" }
       ],
       "Vận dụng cao": [
         { text: "Giải phương trình $z^2 - (3+i)z + (2+3i) = 0$ trong tập số phức. Tính tổng mô-đun hai nghiệm.", answer: "$\\sqrt{5} + \\sqrt{5} = 2\\sqrt{5}$" }
@@ -355,17 +397,37 @@ export const QUESTION_BANK: QuestionBank = {
           { text: "Độ dài $AC' = \\sqrt{AC^2 + CC'^2} = \\sqrt{4+9} = \\sqrt{13}$.", answer: "Đúng" },
           { text: "Diện tích xung quanh lăng trụ là $18$.", answer: "Đúng" }
         ]
+      },
+      {
+        context: "Một nhà kho dạng lăng trụ đứng, đáy là tam giác vuông có hai cạnh góc vuông $6$m và $8$m, chiều cao nhà kho $4$m. Xét các mệnh đề:",
+        statements: [
+          { text: "Diện tích đáy nhà kho là $\\dfrac{1}{2} \\cdot 6 \\cdot 8 = 24$ m².", answer: "Đúng" },
+          { text: "Thể tích nhà kho là $V = 24 \\times 4 = 96$ m³.", answer: "Đúng" },
+          { text: "Cạnh huyền của đáy là $\\sqrt{36 + 64} = 10$ m.", answer: "Đúng" },
+          { text: "Diện tích toàn phần nhà kho (gồm 2 đáy + 3 mặt bên) là $48 + 96 = 144$ m².", answer: "Sai" }
+        ]
+      },
+      {
+        context: "Một đống cát hình chóp tứ giác đều có cạnh đáy $4$m, chiều cao $3$m. Xét các mệnh đề:",
+        statements: [
+          { text: "Diện tích đáy $S = 4^2 = 16$ m².", answer: "Đúng" },
+          { text: "Thể tích đống cát là $V = \\dfrac{1}{3} \\cdot 16 \\cdot 3 = 16$ m³.", answer: "Đúng" },
+          { text: "Nếu khối lượng riêng cát là $1{,}5$ tấn/m³, đống cát nặng $24$ tấn.", answer: "Đúng" },
+          { text: "Nếu tăng chiều cao gấp đôi (giữ nguyên đáy), thể tích tăng gấp $4$ lần.", answer: "Sai" }
+        ]
       }
     ],
     tln: {
       "Thông hiểu": [
         { text: "Cho khối hộp chữ nhật có thể tích $60$ cm³ và diện tích đáy $12$ cm². Tính chiều cao.", answer: "5 cm" },
         { text: "Khối lăng trụ tam giác đều có cạnh đáy $a = 4$ và chiều cao $h = 6$. Tính thể tích.", answer: "$24\\sqrt{3}$" },
-        { text: "Tứ diện đều $ABCD$ có cạnh $a$. Thể tích bằng $\\dfrac{a^3}{6\\sqrt{2}}$. Với $a = 2$, thể tích bằng bao nhiêu?", answer: "$\\dfrac{2\\sqrt{2}}{3}$" }
+        { text: "Tứ diện đều $ABCD$ có cạnh $a$. Thể tích bằng $\\dfrac{a^3}{6\\sqrt{2}}$. Với $a = 2$, thể tích bằng bao nhiêu?", answer: "$\\dfrac{2\\sqrt{2}}{3}$" },
+        { text: "Một thùng carton hình hộp chữ nhật dài $50$cm, rộng $30$cm, cao $20$cm. Thể tích thùng là bao nhiêu lít?", answer: "$30$ lít" }
       ],
       "Vận dụng": [
         { text: "Cho khối chóp $S.ABC$ có đáy là tam giác vuông tại $B$ với $AB = 3$, $BC = 4$. Biết $SA = SB = SC$ và $SA = 5$. Tính thể tích khối chóp.", answer: "10" },
-        { text: "Một bể chứa nước dạng khối hộp chữ nhật đáy vuông cạnh $3$m, chiều cao $2$m. Người ta thả vào bể một khối cầu bán kính $0{,}5$m. Thể tích nước tối đa bể chứa được (không tràn) là bao nhiêu m³?", answer: "$18 - \\dfrac{\\pi}{6}$" }
+        { text: "Một bể chứa nước dạng khối hộp chữ nhật đáy vuông cạnh $3$m, chiều cao $2$m. Người ta thả vào bể một khối cầu bán kính $0{,}5$m. Thể tích nước tối đa bể chứa được (không tràn) là bao nhiêu m³?", answer: "$18 - \\dfrac{\\pi}{6}$" },
+        { text: "Một kim tự tháp dạng chóp tứ giác đều cạnh đáy $230$m, chiều cao $146$m. Tính thể tích (triệu m³).", answer: "$\\approx 2{,}57$ triệu m³" }
       ],
       "Vận dụng cao": [
         { text: "Cho khối chóp tứ giác đều $S.ABCD$ cạnh đáy $a$, góc giữa mặt bên và đáy là $60°$. Tính tỉ số $V_1 / V_2$ biết $V_1$ là thể tích khối cầu ngoại tiếp, $V_2$ là thể tích khối chóp.", answer: "$\\dfrac{\\pi\\sqrt{3}}{2}$" }
@@ -407,17 +469,37 @@ export const QUESTION_BANK: QuestionBank = {
           { text: "Thể tích hình trụ là $25\\pi$.", answer: "Sai" },
           { text: "Diện tích toàn phần là $28\\pi$.", answer: "Đúng" }
         ]
+      },
+      {
+        context: "Một lon nước ngọt hình trụ có đường kính $6{,}6$ cm và chiều cao $12{,}2$ cm. Xét các mệnh đề:",
+        statements: [
+          { text: "Bán kính đáy lon là $r = 3{,}3$ cm.", answer: "Đúng" },
+          { text: "Thể tích lon là $V = \\pi \\cdot (3{,}3)^2 \\cdot 12{,}2 \\approx 417$ cm³ $\\approx 417$ ml.", answer: "Đúng" },
+          { text: "Diện tích nhôm cần để làm lon (gồm xung quanh + 2 đáy) là $S_{tp} = 2\\pi r(r + h) \\approx 321$ cm².", answer: "Đúng" },
+          { text: "Nếu tăng đường kính gấp đôi (giữ chiều cao), thể tích tăng gấp $2$ lần.", answer: "Sai" }
+        ]
+      },
+      {
+        context: "Một quả bóng rổ tiêu chuẩn có chu vi $C \\approx 75$ cm. Coi bóng là hình cầu. Xét các mệnh đề:",
+        statements: [
+          { text: "Bán kính bóng là $R = \\dfrac{C}{2\\pi} = \\dfrac{75}{2\\pi} \\approx 11{,}94$ cm.", answer: "Đúng" },
+          { text: "Diện tích bề mặt quả bóng $S = 4\\pi R^2 \\approx 1790$ cm².", answer: "Đúng" },
+          { text: "Thể tích không khí trong bóng $V = \\dfrac{4}{3}\\pi R^3 \\approx 7124$ cm³.", answer: "Đúng" },
+          { text: "Nếu bơm thêm để chu vi tăng $10\\%$, thể tích tăng khoảng $10\\%$.", answer: "Sai" }
+        ]
       }
     ],
     tln: {
       "Thông hiểu": [
         { text: "Một hình nón có bán kính đáy $r = 3$ và chiều cao $h = 4$. Tính thể tích hình nón.", answer: "$12\\pi$" },
         { text: "Khối cầu có đường kính $d = 6$. Tính diện tích mặt cầu.", answer: "$36\\pi$" },
-        { text: "Hình trụ đường kính đáy $4$ và chiều cao $3$. Tính thể tích.", answer: "$12\\pi$" }
+        { text: "Hình trụ đường kính đáy $4$ và chiều cao $3$. Tính thể tích.", answer: "$12\\pi$" },
+        { text: "Bể bơi hình trụ đường kính $4$m, sâu $1{,}5$m. Tính thể tích nước khi đầy (m³).", answer: "$6\\pi \\approx 18{,}85$ m³" }
       ],
       "Vận dụng": [
         { text: "Một cái nón lá hình nón có bán kính $r = 15$ cm, đường sinh $l = 30$ cm. Tính diện tích bề mặt (xung quanh) nón.", answer: "$450\\pi$ cm²" },
-        { text: "Cho hình trụ nội tiếp khối cầu bán kính $R$. Khi chiều cao hình trụ $h = R\\sqrt{2}$, tính tỉ số thể tích hình trụ / hình cầu.", answer: "$\\dfrac{\\sqrt{2}}{4}$" }
+        { text: "Cho hình trụ nội tiếp khối cầu bán kính $R$. Khi chiều cao hình trụ $h = R\\sqrt{2}$, tính tỉ số thể tích hình trụ / hình cầu.", answer: "$\\dfrac{\\sqrt{2}}{4}$" },
+        { text: "Một xô nước hình nón cụt (miệng rộng hơn đáy): đáy dưới $r_1 = 10$cm, miệng $r_2 = 15$cm, cao $h = 25$cm. Tính thể tích nước đầy xô.", answer: "$\\approx 12763$ cm³" }
       ],
       "Vận dụng cao": [
         { text: "Một bình nước hình nón cụt (bỏ phần đỉnh) có đường kính đáy lớn $20$cm, đáy nhỏ $10$cm, chiều cao $15$cm. Thể tích nước chứa tối đa (đến hàng đơn vị, dùng $\\pi \\approx 3{,}14$) là bao nhiêu cm³?", answer: "$5497$ cm³" }
@@ -642,20 +724,41 @@ export const QUESTION_BANK: QuestionBank = {
           { text: "$b$ có thể nhận mọi giá trị thực.", answer: "Đúng" },
           { text: "Nếu $a = 3$, $b = -1$ thì $\\lim_{x \\to +\\infty} f(x) = 3$.", answer: "Đúng" }
         ]
+      },
+      {
+        context: "Dân số một thành phố tại năm thứ $n$ là $P(n) = \\dfrac{500}{1 + 4 \\cdot e^{-0{,}3n}}$ (nghìn người). Xét các mệnh đề sau:",
+        statements: [
+          { text: "Khi $n = 0$, dân số ban đầu $P(0) = \\dfrac{500}{5} = 100$ nghìn người.", answer: "Đúng" },
+          { text: "$\\lim_{n \\to +\\infty} P(n) = 500$ nghìn người (dân số bão hòa).", answer: "Đúng" },
+          { text: "Mô hình $P(n)$ là hàm Logistic — dân số tăng mãi không giới hạn.", answer: "Sai" },
+          { text: "Khi $n$ đủ lớn, $P(n)$ tiến gần $500$ nhưng không bao giờ vượt $500$ nghìn.", answer: "Đúng" }
+        ]
+      },
+      {
+        context: "Nồng độ thuốc sau khi tiêm vào cơ thể tuân theo $C(t) = \\dfrac{10t}{t^2 + 4}$ (mg/l, $t$ giờ). Xét các mệnh đề khi $t \\to +\\infty$:",
+        statements: [
+          { text: "$\\lim_{t \\to +\\infty} C(t) = 0$ (thuốc sẽ hết tác dụng theo thời gian).", answer: "Đúng" },
+          { text: "$C(t)$ liên tục trên $[0; +\\infty)$.", answer: "Đúng" },
+          { text: "$C(t)$ đạt cực đại tại $t = 2$ giờ, $C(2) = \\dfrac{20}{8} = 2{,}5$ mg/l.", answer: "Đúng" },
+          { text: "Sau $10$ giờ, nồng độ thuốc vẫn lớn hơn $1$ mg/l.", answer: "Sai" }
+        ]
       }
     ],
     tln: {
       "Thông hiểu": [
         { text: "Tính $\\lim_{x \\to 2} \\dfrac{x^3 - 8}{x - 2}$.", answer: "$12$" },
         { text: "Tính $\\lim_{x \\to +\\infty} \\dfrac{3x - 1}{2x + 5}$.", answer: "$\\dfrac{3}{2}$" },
-        { text: "Tính $\\lim_{x \\to 0} \\dfrac{1 - \\cos 2x}{x^2}$.", answer: "$2$" }
+        { text: "Tính $\\lim_{x \\to 0} \\dfrac{1 - \\cos 2x}{x^2}$.", answer: "$2$" },
+        { text: "Dân số tăng theo $P(t) = \\dfrac{1000}{1 + 9e^{-0{,}5t}}$ (nghìn). Tìm $\\lim_{t \\to +\\infty} P(t)$.", answer: "$1000$ nghìn" }
       ],
       "Vận dụng": [
         { text: "Tìm $m$ để hàm $f(x) = \\begin{cases} \\dfrac{x^2 - 1}{x - 1} & x \\ne 1 \\\\ m & x = 1 \\end{cases}$ liên tục tại $x = 1$.", answer: "$m = 2$" },
-        { text: "Tính $\\lim_{x \\to 0} \\dfrac{\\sqrt{1 + 2x} - 1}{x}$.", answer: "$1$" }
+        { text: "Tính $\\lim_{x \\to 0} \\dfrac{\\sqrt{1 + 2x} - 1}{x}$.", answer: "$1$" },
+        { text: "Chi phí sản xuất trung bình mỗi sản phẩm khi sản xuất $n$ sản phẩm là $f(n) = 50 + \\dfrac{2000}{n}$ (nghìn đồng). Khi $n$ rất lớn, chi phí trung bình tiến tới bao nhiêu?", answer: "$50$ nghìn đồng" }
       ],
       "Vận dụng cao": [
-        { text: "Chứng minh phương trình $x^3 - 3x + 1 = 0$ có nghiệm trong khoảng $(1; 2)$. Xác nhận đúng hay sai: phương trình có ít nhất 1 nghiệm thuộc $(1;2)$.", answer: "Đúng" }
+        { text: "Chứng minh phương trình $x^3 - 3x + 1 = 0$ có nghiệm trong khoảng $(1; 2)$. Xác nhận đúng hay sai: phương trình có ít nhất 1 nghiệm thuộc $(1;2)$.", answer: "Đúng" },
+        { text: "Nhiệt độ lò nung nguội theo $T(t) = 25 + 475 \\cdot e^{-0{,}1t}$ (°C). Sau rất lâu, nhiệt độ lò tiến tới bao nhiêu? Sau bao lâu nhiệt độ giảm còn dưới $100$°C? ($\\ln 6{,}33 \\approx 1{,}845$)", answer: "$25$°C; $t \\approx 18{,}45$ phút" }
       ]
     }
   },
@@ -1156,6 +1259,39 @@ export const QUESTION_BANK: QuestionBank = {
       "Thông hiểu": [
         { text: "Cho tứ diện $ABCD$. Tìm vectơ $\\vec{x} = \\vec{AB} + \\vec{CD} - \\vec{AD}$:", options: ["$\\vec{CB}$", "$\\vec{BC}$", "$\\vec{BD}$", "$\\vec{AC}$"], answer: 'A' }
       ]
+    },
+    ds: [
+      {
+        context: "Cho hình hộp $ABCD.A'B'C'D'$. Xét các mệnh đề sau:",
+        statements: [
+          { text: "$\\vec{AB} + \\vec{AD} + \\vec{AA'} = \\vec{AC'}$.", answer: "Đúng" },
+          { text: "$\\vec{AB} + \\vec{A'D'} = \\vec{AC}$ (nằm trong mặt phẳng đáy).", answer: "Sai" },
+          { text: "$\\vec{AC'} = \\vec{AC} + \\vec{CC'}$ (quy tắc ba điểm).", answer: "Đúng" },
+          { text: "Bốn đường chéo của hình hộp cắt nhau tại trung điểm mỗi đường.", answer: "Đúng" }
+        ]
+      },
+      {
+        context: "Cho tứ diện đều $ABCD$ cạnh $a$, $M$ là trung điểm $BC$. Xét các mệnh đề:",
+        statements: [
+          { text: "$\\vec{AM} = \\dfrac{1}{2}(\\vec{AB} + \\vec{AC})$.", answer: "Đúng" },
+          { text: "$\\vec{AB} \\cdot \\vec{AC} = \\dfrac{a^2}{2}$.", answer: "Đúng" },
+          { text: "$\\vec{DA} + \\vec{DB} + \\vec{DC} = 3\\vec{DG}$ với $G$ là trọng tâm $\\triangle ABC$.", answer: "Đúng" },
+          { text: "$|\\vec{AB} + \\vec{AC}| = a\\sqrt{3}$.", answer: "Đúng" }
+        ]
+      }
+    ],
+    tln: {
+      "Thông hiểu": [
+        { text: "Cho hình bình hành $ABCD$. Chứng minh $\\vec{AC} + \\vec{BD} = 2\\vec{BC}$. Kết quả đúng hay sai?", answer: "Đúng" },
+        { text: "Cho hình hộp $ABCD.A'B'C'D'$ có $AB = 3$, $AD = 4$, $AA' = 5$. Tính $|\\vec{AC'}|$.", answer: "$5\\sqrt{2}$" }
+      ],
+      "Vận dụng": [
+        { text: "Ba lực $\\vec{F_1} = (2; 1; 3)$, $\\vec{F_2} = (-1; 3; 0)$, $\\vec{F_3} = (1; -2; -1)$ tác dụng lên vật. Tìm độ lớn hợp lực.", answer: "$\\sqrt{4+4+4} = 2\\sqrt{3}$ N" },
+        { text: "Máy bay bay từ $A$ đến $B$ theo vectơ $\\vec{AB} = (300; 400; 5)$ km. Tính khoảng cách bay.", answer: "$500$ km (xấp xỉ)" }
+      ],
+      "Vận dụng cao": [
+        { text: "Cho tứ diện $ABCD$, $G$ là trọng tâm. Chứng minh $\\vec{GA} + \\vec{GB} + \\vec{GC} + \\vec{GD} = \\vec{0}$. Kết quả đúng hay sai?", answer: "Đúng" }
+      ]
     }
   },
 
@@ -1164,6 +1300,40 @@ export const QUESTION_BANK: QuestionBank = {
       "Nhận biết": [
         { text: "Trong không gian $Oxyz$, cho $\\vec{a} = (1; 2; -3)$. Độ dài của $\\vec{a}$ là:", options: ["$\\sqrt{14}$", "14", "$\\sqrt{6}$", "$\\sqrt{5}$"], answer: 'A' },
         { text: "Cho $A(1; 2; 3), B(2; 4; 2)$. Tọa độ vectơ $\\vec{AB}$ là:", options: ["$(1; 2; -1)$", "$(3; 6; 5)$", "$(-1; -2; 1)$", "$(1; 2; 1)$"], answer: 'A' }
+      ]
+    },
+    ds: [
+      {
+        context: "Trong không gian $Oxyz$, cho $A(1; 2; 3)$, $B(3; 4; 1)$, $C(2; 0; 5)$. Xét các mệnh đề:",
+        statements: [
+          { text: "$\\vec{AB} = (2; 2; -2)$.", answer: "Đúng" },
+          { text: "Trung điểm $M$ của $AB$ có tọa độ $M(2; 3; 2)$.", answer: "Đúng" },
+          { text: "$|\\vec{AB}| = 2\\sqrt{3}$.", answer: "Đúng" },
+          { text: "Ba điểm $A$, $B$, $C$ thẳng hàng.", answer: "Sai" }
+        ]
+      },
+      {
+        context: "Robot công nghiệp di chuyển từ vị trí $P(0; 0; 0)$ đến $Q(4; 3; 0)$ rồi đến $R(4; 3; 5)$ trong hệ tọa độ $Oxyz$ (đơn vị mét). Xét các mệnh đề:",
+        statements: [
+          { text: "Quãng đường từ $P$ đến $Q$ trên mặt phẳng ngang là $PQ = 5$ m.", answer: "Đúng" },
+          { text: "Quãng đường từ $Q$ lên $R$ (theo phương thẳng đứng) là $5$ m.", answer: "Đúng" },
+          { text: "Khoảng cách tối thiểu từ $P$ đến $R$ (đường chim bay) là $PR = 5\\sqrt{2}$ m.", answer: "Đúng" },
+          { text: "Tổng quãng đường thực tế robot di chuyển là $5\\sqrt{2}$ m.", answer: "Sai" }
+        ]
+      }
+    ],
+    tln: {
+      "Thông hiểu": [
+        { text: "Cho $\\vec{a} = (2; -1; 3)$, $\\vec{b} = (1; 4; -2)$. Tính $\\vec{a} \\cdot \\vec{b}$.", answer: "$-8$" },
+        { text: "Cho $A(1; -2; 3)$ và $B(4; 2; -1)$. Tính $AB$.", answer: "$\\sqrt{41}$" },
+        { text: "Drone bay từ điểm $A(0; 0; 10)$ đến $B(30; 40; 10)$. Tính khoảng cách bay.", answer: "$50$ m" }
+      ],
+      "Vận dụng": [
+        { text: "Tàu thủy ở vị trí $A(3; 5; 0)$ phát tín hiệu, trạm thu ở $B(7; 8; 0)$. Tính khoảng cách $AB$ (đơn vị km).", answer: "$5$ km" },
+        { text: "Cho 3 đỉnh tam giác $A(1; 0; 0)$, $B(0; 1; 0)$, $C(0; 0; 1)$. Tính diện tích $\\triangle ABC$.", answer: "$\\dfrac{\\sqrt{3}}{2}$" }
+      ],
+      "Vận dụng cao": [
+        { text: "Vệ tinh phát sóng từ $S(0; 0; 36000)$ km. Trạm mặt đất tại $A(6400; 0; 0)$ km. Tính khoảng cách $SA$.", answer: "$\\approx 36564$ km" }
       ]
     }
   },
