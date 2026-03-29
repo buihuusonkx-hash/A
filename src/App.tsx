@@ -6,7 +6,7 @@
 import { useState, useEffect, Fragment, type RefObject } from 'react';
 import { PenSquare, Download, Plus, Trash2, ChevronRight, Sparkles, RefreshCw, X, BookOpen, Layout, ListChecks, FileJson } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { pickNLCQuestion, pickDSQuestion, pickTLNQuestion } from './questionBank';
+import { pickNLCQuestion, pickDSQuestion, pickTLNQuestion, resetUsedQuestions } from './questionBank';
 import { findYeuCau, getAllTopics } from './yeuCauCanDat';
 import { exportMatrixWord, exportSpecMatrixWord, exportExamWord } from './exportWord';
 import { useMathRender } from './MathText';
@@ -698,6 +698,9 @@ function TabTaoDe({ data, countQuestions, onPrev, monHoc = 'Toán' }: any) {
 
   // Hàm sinh đề dựa trên dữ liệu từ Ma trận đặc tả
   const handleGenerateExam = () => {
+
+    // Reset tracking để không trùng câu từ lần tạo đề trước
+    resetUsedQuestions();
 
     let globalStt = 1; // Số thứ tự câu hỏi xuyên suốt
 

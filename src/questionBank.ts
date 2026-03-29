@@ -1466,6 +1466,21 @@ function findBestTopic(noiDung: string, fallbackTopics: string[]): TopicBank | u
   return QUESTION_BANK[bankKeys[0]];
 }
 
+// ============================================================
+// TRACKING: Theo dõi câu hỏi đã sử dụng để tránh trùng lặp
+// ============================================================
+const usedDSIndices: Map<string, Set<number>> = new Map();
+const usedTLNIndices: Map<string, Set<number>> = new Map();
+
+/**
+ * Reset toàn bộ tracking khi tạo đề mới.
+ * Gọi hàm này trước khi bắt đầu generateExam.
+ */
+export function resetUsedQuestions(): void {
+  usedDSIndices.clear();
+  usedTLNIndices.clear();
+}
+
 /**
  * Lấy câu hỏi NLC ngẫu nhiên theo chủ đề và mức độ
  */
@@ -1482,10 +1497,10 @@ export function pickNLCQuestion(noiDung: string, mucDo: string): NLCQuestion {
 }
 
 /**
- * Lấy câu hỏi Đúng/Sai ngẫu nhiên theo chủ đề
+ * Lấy câu hỏi Đúng/Sai ngẫu nhiên theo chủ đề — KHÔNG TRÙNG LẶP
  */
 export function pickDSQuestion(noiDung: string): DSQuestion {
-  const fallbackTopics = ["Hàm số", "Nguyên hàm - Tích phân", "Xác suất", "Xác suất có điều kiện", "Tích phân ứng dụng", "Phương trình - Bất phương trình mũ và logarit", "Đường thẳng và mặt phẳng trong không gian", "Thống kê", "Tổ hợp - Xác suất", "Toán thực tế", "Hệ phương trình"];
+  const fallbackTopics = ["Hàm số", "Nguyên hàm - Tích phân", "Xác suất", "Xác suất có điều kiện", "Tích phân ứng dụng", "Phương trình - Bất phương trình mũ và logarit", "Đường thẳng và mặt phẳng trong không gian", "Thống kê", "Tổ hợp - Xác suất", "Toán thực tế", "Hệ phương trình", "Khối đa diện", "Mặt cầu - Hình trụ - Hình nón", "Tính đơn điệu của hàm số", "Giới hạn hàm số", "Dãy số - Cấp số cộng - Cấp số nhân", "Bài toán thực tế tổng hợp", "Vectơ và các phép toán vectơ trong không gian", "Toạ độ của vectơ trong không gian"];
   const bankEntry = findBestTopic(noiDung, fallbackTopics);
   const pool = bankEntry?.ds || [];
   if (pool.length === 0) {
@@ -1499,14 +1514,35 @@ export function pickDSQuestion(noiDung: string): DSQuestion {
       ]
     };
   }
-  return pool[Math.floor(Math.random() * pool.length)];
+
+  // Tracking: chọn câu chưa dùng
+  const key = noiDung || '__default__';
+  if (!usedDSIndices.has(key)) usedDSIndices.set(key, new Set());
+  const used = usedDSIndices.get(key)!;
+  
+  // Shuffle pool indices
+  const indices = shuffle(Array.from({ length: pool.length }, (_, i) => i));
+  
+  // Tìm câu chưa dùng
+  for (const idx of indices) {
+    if (!used.has(idx)) {
+      used.add(idx);
+      return pool[idx];
+    }
+  }
+  
+  // Nếu hết câu chưa dùng, reset và chọn lại
+  used.clear();
+  const chosen = indices[0];
+  used.add(chosen);
+  return pool[chosen];
 }
 
 /**
- * Lấy câu hỏi TLN ngẫu nhiên theo chủ đề và mức độ
+ * Lấy câu hỏi TLN ngẫu nhiên theo chủ đề và mức độ — KHÔNG TRÙNG LẶP
  */
 export function pickTLNQuestion(noiDung: string, mucDo: string): TLNQuestion {
-  const fallbackTopics = ["Hàm số", "Nguyên hàm - Tích phân", "Xác suất", "Xác suất có điều kiện", "Tích phân ứng dụng", "Phương trình - Bất phương trình mũ và logarit", "Thống kê", "Tổ hợp - Xác suất", "Toán thực tế", "Hệ phương trình"];
+  const fallbackTopics = ["Hàm số", "Nguyên hàm - Tích phân", "Xác suất", "Xác suất có điều kiện", "Tích phân ứng dụng", "Phương trình - Bất phương trình mũ và logarit", "Thống kê", "Tổ hợp - Xác suất", "Toán thực tế", "Hệ phương trình", "Khối đa diện", "Mặt cầu - Hình trụ - Hình nón", "Tính đơn điệu của hàm số", "Giới hạn hàm số", "Dãy số - Cấp số cộng - Cấp số nhân", "Bài toán thực tế tổng hợp", "Vectơ và các phép toán vectơ trong không gian", "Toạ độ của vectơ trong không gian"];
   const bankEntry = findBestTopic(noiDung, fallbackTopics);
   const levels = bankEntry?.tln || {};
   const pool: TLNQuestion[] =
@@ -1514,5 +1550,26 @@ export function pickTLNQuestion(noiDung: string, mucDo: string): TLNQuestion {
   if (pool.length === 0) {
     return { text: `Câu hỏi trả lời ngắn về ${noiDung} mức ${mucDo}.`, answer: "..." };
   }
-  return pool[Math.floor(Math.random() * pool.length)];
+
+  // Tracking: chọn câu chưa dùng
+  const key = `${noiDung}__${mucDo}`;
+  if (!usedTLNIndices.has(key)) usedTLNIndices.set(key, new Set());
+  const used = usedTLNIndices.get(key)!;
+  
+  // Shuffle pool indices
+  const indices = shuffle(Array.from({ length: pool.length }, (_, i) => i));
+  
+  // Tìm câu chưa dùng
+  for (const idx of indices) {
+    if (!used.has(idx)) {
+      used.add(idx);
+      return pool[idx];
+    }
+  }
+  
+  // Nếu hết câu chưa dùng, reset và chọn lại
+  used.clear();
+  const chosen = indices[0];
+  used.add(chosen);
+  return pool[chosen];
 }
