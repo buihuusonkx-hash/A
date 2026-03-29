@@ -506,44 +506,36 @@ ${items.join('\n')}`;
 
   // ── ĐÁP ÁN VÀ THANG ĐIỂM CHẤM ──
   const buildDapAn = () => {
-    // --- PHẦN I: Bảng ngang Câu 1..N / Đáp án ---
+    const cellStyle = 'border:1pt solid #000; padding:3pt 6pt; text-align:center; font-size:11pt;';
+    const headerCellStyle = `${cellStyle} font-weight:bold;`;
+
+    // --- PHẦN I: Bảng ngang với cột "Câu" / "Chọn" ---
     const headerCells_I = phanI.map((_, i) =>
-      `<td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-weight:bold; font-size:11pt;">Câu ${i + 1}</td>`
+      `<td style="${headerCellStyle}">Câu ${i + 1}</td>`
     ).join('');
     const answerCells_I = phanI.map(q =>
-      `<td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-weight:bold; font-size:11pt;">${q.dapAn || 'A'}</td>`
+      `<td style="${headerCellStyle}">${q.dapAn || 'A'}</td>`
     ).join('');
 
     const dapAnPhanI = phanI.length > 0 ? `
 <p style="font-size:13pt; font-weight:bold; margin-top:10pt;">PHẦN I</p>
 <p style="font-size:12pt; font-style:italic; margin:2pt 0 6pt 0;">(Mỗi câu trả lời đúng học sinh được <b>0,25 điểm</b>)</p>
 <table style="border-collapse:collapse; font-size:11pt; width:100%; margin-bottom:10pt;">
-  <tr>${headerCells_I}</tr>
-  <tr>${answerCells_I}</tr>
+  <tr>
+    <td style="${headerCellStyle}">Câu</td>
+    ${headerCells_I}
+  </tr>
+  <tr>
+    <td style="${headerCellStyle}">Chọn</td>
+    ${answerCells_I}
+  </tr>
 </table>` : '';
 
-    // --- PHẦN II: Bảng dọc Câu 1..N, mỗi câu có a)Đ/S, b)Đ/S, c)Đ/S, d)Đ/S ---
-    const dapAnPhanII_rows = phanII.map((q, i) => {
-      const stmts = q.statements || [];
-      const cells = stmts.map((s: any, li: number) => {
-        const label = ['a', 'b', 'c', 'd'][li];
-        const val = s.answer === 'Đúng' ? 'Đ' : 'S';
-        return `<td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-size:11pt;">${label}) ${val}</td>`;
-      }).join('');
-      return `<tr>
-  <td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-weight:bold; font-size:11pt;">Câu ${i + 1}</td>
-  ${cells}
-</tr>`;
-    }).join('\n');
+    // --- PHẦN II: Bảng Đ/S theo layout hàng = a/b/c/d, cột = Câu 1..N ---
+    const dsColHeaders = phanII.map((_, i) =>
+      `<td style="${headerCellStyle}">Câu ${i + 1}</td>`
+    ).join('');
 
-    // Header cho bảng DS: Câu | Câu 1 ... Câu N (cột cho mỗi ý)
-    const dsHeaderCols = phanII.length > 0
-      ? `<tr>
-  <td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-weight:bold; font-size:11pt; background:#D9D9D9;"></td>
-  ${phanII.map((_, i) => `<td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-weight:bold; font-size:11pt; background:#D9D9D9;" colspan="4">Câu ${i + 1}</td>`).join('')}
-</tr>` : '';
-
-    // Mỗi hàng = 1 ý (a/b/c/d), cột = câu
     const dsAnswerRows: string[] = [];
     if (phanII.length > 0) {
       for (let li = 0; li < 4; li++) {
@@ -552,41 +544,36 @@ ${items.join('\n')}`;
           const stmts = q.statements || [];
           const s = stmts[li];
           const val = s ? (s.answer === 'Đúng' ? 'Đ' : 'S') : '?';
-          return `<td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-size:11pt;">${val}</td>`;
+          return `<td style="${cellStyle}">${label}) ${val}</td>`;
         }).join('');
         dsAnswerRows.push(`<tr>
-  <td style="border:1pt solid #000; padding:2pt 5pt; font-size:11pt; font-weight:bold;">${label})</td>
+  <td style="${cellStyle}"></td>
   ${cells}
 </tr>`);
       }
     }
 
-    // Build bảng DS theo layout: hàng = a/b/c/d, cột = Câu 1..N
-    const dsColHeaders = phanII.map((_, i) =>
-      `<td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-weight:bold; font-size:11pt; background:#D9D9D9;">Câu ${i + 1}</td>`
-    ).join('');
-
     const dapAnPhanII = phanII.length > 0 ? `
 <p style="font-size:13pt; font-weight:bold; margin-top:12pt;">PHẦN II</p>
-<p style="font-size:12pt; margin:2pt 0;">Điểm tối đa của câu 01 của bài là <b>1 điểm</b>.</p>
+<p style="font-size:12pt; margin:2pt 0;">Điểm tối đa của 01 câu hỏi là <b>1 điểm</b>.</p>
 <p style="font-size:11pt; margin:1pt 0;">- Thí sinh chỉ lựa chọn chính xác 01 ý trong 1 câu hỏi được <b>0,1 điểm</b>.</p>
 <p style="font-size:11pt; margin:1pt 0;">- Thí sinh chỉ lựa chọn chính xác 02 ý trong 1 câu hỏi được <b>0,25 điểm</b>.</p>
 <p style="font-size:11pt; margin:1pt 0;">- Thí sinh chỉ lựa chọn chính xác 03 ý trong 1 câu hỏi được <b>0,5 điểm</b>.</p>
 <p style="font-size:11pt; margin:1pt 0 6pt 0;">- Thí sinh chỉ lựa chọn chính xác 04 ý trong 1 câu hỏi được <b>1 điểm</b>.</p>
 <table style="border-collapse:collapse; font-size:11pt; margin-bottom:10pt;">
   <tr>
-    <td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-weight:bold; font-size:11pt; background:#D9D9D9;"></td>
+    <td style="${headerCellStyle}"></td>
     ${dsColHeaders}
   </tr>
   ${dsAnswerRows.join('\n')}
 </table>` : '';
 
-    // --- PHẦN III: Bảng ngang Câu 1..N / Đáp án ---
+    // --- PHẦN III: Bảng ngang với cột "Câu" / "Chọn" ---
     const headerCells_III = phanIII.map((_, i) =>
-      `<td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-weight:bold; font-size:11pt;">Câu ${i + 1}</td>`
+      `<td style="${headerCellStyle}">Câu ${i + 1}</td>`
     ).join('');
     const answerCells_III = phanIII.map(q =>
-      `<td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-size:11pt;">${renderMathSync(q.dapAn || '...')}</td>`
+      `<td style="${cellStyle} font-weight:bold;">${renderMathSync(q.dapAn || '...')}</td>`
     ).join('');
 
     const dapAnPhanIII = phanIII.length > 0 ? `
@@ -594,11 +581,11 @@ ${items.join('\n')}`;
 <p style="font-size:12pt; font-style:italic; margin:2pt 0 6pt 0;">(Mỗi câu trả lời đúng học sinh được <b>0,5 điểm</b>)</p>
 <table style="border-collapse:collapse; font-size:11pt; width:auto; margin-bottom:10pt;">
   <tr>
-    <td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-weight:bold; font-size:11pt; background:#D9D9D9;"></td>
+    <td style="${headerCellStyle}">Câu</td>
     ${headerCells_III}
   </tr>
   <tr>
-    <td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-weight:bold; font-size:11pt;">Chọn</td>
+    <td style="${headerCellStyle}">Chọn</td>
     ${answerCells_III}
   </tr>
 </table>` : '';

@@ -925,18 +925,108 @@ function ExamContent({ exam }: { exam: any[] }) {
         </section>
       )}
 
-      {/* Bảng đáp án tóm tắt */}
-      {showAnswers && p1.length > 0 && (
-        <section className="mt-8 p-4 bg-slate-50 rounded-2xl border border-slate-200">
-          <h5 className="font-bold text-sm mb-3">Bảng đáp án Phần I</h5>
-          <div className="flex flex-wrap gap-2">
-            {p1.map(q => (
-              <div key={q.stt} className="text-xs bg-white border border-slate-200 rounded-lg px-2 py-1 text-center min-w-[44px]">
-                <div className="text-slate-400">Câu {q.stt}</div>
-                <div className="font-black text-indigo-600">{q.dapAn}</div>
+      {/* ĐÁP ÁN VÀ THANG ĐIỂM CHẤM — Chuẩn BGD */}
+      {showAnswers && (
+        <section className="mt-10 pt-8 border-t-2 border-slate-900">
+          <h3 className="text-center text-lg font-black uppercase tracking-wide mb-8">ĐÁP ÁN VÀ THANG ĐIỂM CHẤM</h3>
+
+          {/* PHẦN I */}
+          {p1.length > 0 && (
+            <div className="mb-8">
+              <p className="font-bold text-sm mb-1">PHẦN I</p>
+              <p className="text-xs italic text-slate-600 mb-3">(Mỗi câu trả lời đúng học sinh được <strong>0,25 điểm</strong>)</p>
+              <div className="overflow-x-auto">
+                <table className="border-collapse text-xs">
+                  <tbody>
+                    <tr>
+                      <td className="border border-slate-400 px-2 py-1 font-bold bg-slate-100 text-center">Câu</td>
+                      {p1.map((_, i) => (
+                        <td key={i} className="border border-slate-400 px-2 py-1 font-bold text-center bg-slate-50 min-w-[42px]">Câu {i + 1}</td>
+                      ))}
+                    </tr>
+                    <tr>
+                      <td className="border border-slate-400 px-2 py-1 font-bold bg-slate-100 text-center">Chọn</td>
+                      {p1.map(q => (
+                        <td key={q.stt} className="border border-slate-400 px-2 py-1 font-black text-center text-indigo-700">{q.dapAn}</td>
+                      ))}
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-            ))}
-          </div>
+            </div>
+          )}
+
+          {/* PHẦN II */}
+          {p2.length > 0 && (
+            <div className="mb-8">
+              <p className="font-bold text-sm mb-1">PHẦN II</p>
+              <p className="text-xs text-slate-700 mb-1">Điểm tối đa của 01 câu hỏi là <strong>1 điểm</strong>.</p>
+              <ul className="text-[11px] text-slate-600 mb-3 list-none space-y-0.5 pl-2">
+                <li>- Thí sinh chỉ lựa chọn chính xác 01 ý trong 1 câu hỏi được <strong>0,1 điểm</strong>.</li>
+                <li>- Thí sinh chỉ lựa chọn chính xác 02 ý trong 1 câu hỏi được <strong>0,25 điểm</strong>.</li>
+                <li>- Thí sinh chỉ lựa chọn chính xác 03 ý trong 1 câu hỏi được <strong>0,5 điểm</strong>.</li>
+                <li>- Thí sinh chỉ lựa chọn chính xác 04 ý trong 1 câu hỏi được <strong>1 điểm</strong>.</li>
+              </ul>
+              <div className="overflow-x-auto">
+                <table className="border-collapse text-xs">
+                  <tbody>
+                    <tr>
+                      <td className="border border-slate-400 px-2 py-1 font-bold bg-slate-100 text-center min-w-[30px]"></td>
+                      {p2.map((_, i) => (
+                        <td key={i} className="border border-slate-400 px-2 py-1 font-bold text-center bg-slate-50 min-w-[65px]">Câu {i + 1}</td>
+                      ))}
+                    </tr>
+                    {[0, 1, 2, 3].map(li => {
+                      const label = ['a', 'b', 'c', 'd'][li];
+                      return (
+                        <tr key={li}>
+                          <td className="border border-slate-400 px-2 py-1 text-center bg-slate-50"></td>
+                          {p2.map((q, qi) => {
+                            const s = q.statements?.[li];
+                            const val = s ? (s.answer === 'Đúng' ? 'Đ' : 'S') : '?';
+                            return (
+                              <td key={qi} className={cn(
+                                "border border-slate-400 px-2 py-1 text-center font-semibold",
+                                val === 'Đ' ? 'text-green-700' : 'text-slate-600'
+                              )}>
+                                {label}) {val}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* PHẦN III */}
+          {p3.length > 0 && (
+            <div className="mb-4">
+              <p className="font-bold text-sm mb-1">PHẦN III</p>
+              <p className="text-xs italic text-slate-600 mb-3">(Mỗi câu trả lời đúng học sinh được <strong>0,5 điểm</strong>)</p>
+              <div className="overflow-x-auto">
+                <table className="border-collapse text-xs">
+                  <tbody>
+                    <tr>
+                      <td className="border border-slate-400 px-2 py-1 font-bold bg-slate-100 text-center">Câu</td>
+                      {p3.map((_, i) => (
+                        <td key={i} className="border border-slate-400 px-2 py-1 font-bold text-center bg-slate-50 min-w-[50px]">Câu {i + 1}</td>
+                      ))}
+                    </tr>
+                    <tr>
+                      <td className="border border-slate-400 px-2 py-1 font-bold bg-slate-100 text-center">Chọn</td>
+                      {p3.map(q => (
+                        <td key={q.stt} className="border border-slate-400 px-2 py-1 font-black text-center text-indigo-700">{q.dapAn}</td>
+                      ))}
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </section>
       )}
     </div>
