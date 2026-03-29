@@ -396,7 +396,7 @@ export function exportSpecMatrixWord(
 }
 
 // ============================================================
-// 3. XUẤT ĐỀ THI
+// 3. XUẤT ĐỀ THI — Chuẩn BGD 2025-2026
 // ============================================================
 export async function exportExamWord(
   exam: any[],
@@ -404,7 +404,7 @@ export async function exportExamWord(
   lop = '12',
   thoiGian = '90',
   truong = 'TRƯỜNG THPT ...',
-  maDeThiNum = '001'
+  maDeThiNum = '112'
 ) {
   if (!exam || exam.length === 0) {
     alert('Chưa có đề thi! Vui lòng tạo đề thi trước.');
@@ -413,9 +413,10 @@ export async function exportExamWord(
   // Pre-load KaTeX để renderMathSync hoạt động đúng
   await loadKatex();
 
-  const phanI  = exam.filter(q => q.phan === 'I');
-  const phanII = exam.filter(q => q.phan === 'II');
-  const phanIII= exam.filter(q => q.phan === 'III');
+  const phanI   = exam.filter(q => q.phan === 'I');
+  const phanII  = exam.filter(q => q.phan === 'II');
+  const phanIII = exam.filter(q => q.phan === 'III');
+  const totalPages = Math.max(3, Math.ceil(exam.length / 10));
 
   // ── Phần I: Trắc nghiệm nhiều phương án ──
   const buildPhanI = () => {
@@ -423,189 +424,214 @@ export async function exportExamWord(
     const items = phanI.map((q, i) => {
       const stt = i + 1;
       const noiDung = renderMathSync(q.noiDung || `Câu hỏi trắc nghiệm ${stt}.`);
-      const optLabels = ['A', 'B', 'C', 'D'];
       const optTexts: string[] = q.options && q.options.length === 4
         ? q.options
         : ['...', '...', '...', '...'];
-      const options = optLabels.map((opt, idx) => {
-        const optText = renderMathSync(String(optTexts[idx] || '...'));
-        const isBold = q.dapAn === opt ? ' font-weight:bold;' : '';
-        return `<td style="width:22%;${isBold}">${opt}. ${optText}</td>`;
-      }).join('');
-      return `<div class="cau">
-        <p class="cau-num">Câu ${stt}. <span style="font-weight:normal;">${noiDung}</span></p>
-        <table style="width:100%; border:none; margin-top:2pt;">
-          <tr style="border:none;">${options}</tr>
-        </table>
-      </div>`;
+      // Layout: dòng 1 = A + B, dòng 2 = C + D (2 cột, giống mẫu BGD)
+      const row1 = `<tr style="border:none;">
+        <td style="border:none; padding:1pt 8pt 1pt 20pt; width:50%; font-size:13pt;">A. ${renderMathSync(String(optTexts[0] || '...'))}</td>
+        <td style="border:none; padding:1pt 8pt; width:50%; font-size:13pt;">B. ${renderMathSync(String(optTexts[1] || '...'))}</td>
+      </tr>`;
+      const row2 = `<tr style="border:none;">
+        <td style="border:none; padding:1pt 8pt 1pt 20pt; width:50%; font-size:13pt;">C. ${renderMathSync(String(optTexts[2] || '...'))}</td>
+        <td style="border:none; padding:1pt 8pt; width:50%; font-size:13pt;">D. ${renderMathSync(String(optTexts[3] || '...'))}</td>
+      </tr>`;
 
+      return `<div class="cau">
+  <p style="font-size:13pt; margin:6pt 0 2pt 0;"><b>Câu ${stt}.</b> ${noiDung}</p>
+  <table style="width:100%; border:none; border-collapse:collapse; margin:0;">
+    ${row1}${row2}
+  </table>
+</div>`;
     });
+
     return `
-<p class="phan-header">PHẦN I. TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN ĐÚNG (${phanI.length} câu)</p>
-<p class="phan-note">Thí sinh chọn đáp án đúng nhất (A, B, C hoặc D).</p>
+<p style="font-size:13pt; font-weight:bold; margin-top:12pt; margin-bottom:2pt;">PHẦN I. Câu trắc nghiệm nhiều phương án.</p>
+<p style="font-size:12pt; font-style:italic; margin:0 0 6pt 0;">Thí sinh trả lời từ câu 1 đến câu ${phanI.length}. Mỗi câu hỏi thí sinh chỉ chọn một phương án.</p>
 ${items.join('\n')}`;
   };
 
   // ── Phần II: Đúng/Sai ──
   const buildPhanII = () => {
     if (phanII.length === 0) return '';
-    const offset = phanI.length;
     const items = phanII.map((q, i) => {
-      const stt = offset + i + 1;
+      const stt = i + 1;
       const context = renderMathSync(q.context || q.noiDung || `Câu Đúng/Sai ${i + 1}.`);
       const stmtLabels = ['a', 'b', 'c', 'd'];
 
       const stmtRows = (q.statements || [{text:'Mệnh đề a.'},{text:'Mệnh đề b.'},{text:'Mệnh đề c.'},{text:'Mệnh đề d.'}])
         .map((stmt: any, li: number) => {
           const stmtText = renderMathSync(stmt.text || `Mệnh đề ${stmtLabels[li]}.`);
-          return `<tr>
-            <td class="label" style="width:16pt; font-weight:bold; border:none; padding:2pt 4pt; vertical-align:top;">${stmtLabels[li]})</td>
-            <td style="border:none; text-align:left; padding:2pt 4pt;">${stmtText}</td>
-            <td style="border:none; white-space:nowrap; text-align:right; padding:2pt 4pt; width:70pt;">
-              <span class="box">Đúng</span> <span class="box">Sai</span>
-            </td>
-          </tr>`;
-        }).join('');
+          return `<p style="font-size:13pt; margin:2pt 0 2pt 20pt;">${stmtLabels[li]}) ${stmtText}</p>`;
+        }).join('\n');
 
       return `<div class="cau">
-        <p class="cau-num">Câu ${stt}. <span style="font-weight:normal;">${context}</span></p>
-        <table class="ds-table">${stmtRows}</table>
-      </div>`;
+  <p style="font-size:13pt; margin:6pt 0 2pt 0;"><b>Câu ${stt}:</b></p>
+  <p style="font-size:13pt; margin:2pt 0;">${context}</p>
+  ${stmtRows}
+</div>`;
     });
 
     return `
-<p class="phan-header">PHẦN II. TRẮC NGHIỆM ĐÚNG/SAI (${phanII.length} câu)</p>
-<p class="phan-note">Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn <strong>Đúng</strong> hoặc <strong>Sai</strong>.</p>
+<p style="font-size:13pt; font-weight:bold; margin-top:14pt; margin-bottom:2pt;">PHẦN II. Câu trắc nghiệm đúng sai.</p>
+<p style="font-size:12pt; font-style:italic; margin:0 0 6pt 0;">(Thí sinh trả lời từ câu 1 đến câu ${phanII.length}. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn đúng hoặc sai.)</p>
 ${items.join('\n')}`;
   };
 
   // ── Phần III: Trả lời ngắn ──
   const buildPhanIII = () => {
     if (phanIII.length === 0) return '';
-    const offset = phanI.length + phanII.length;
     const items = phanIII.map((q, i) => {
-      const stt = offset + i + 1;
+      const stt = i + 1;
       const noiDung = renderMathSync(q.noiDung || `Câu trả lời ngắn ${i + 1}.`);
       return `<div class="cau">
-        <p class="cau-num">Câu ${stt}. <span style="font-weight:normal;">${noiDung}</span></p>
-        <p style="margin-top:4pt;">Trả lời: <span class="tln-blank">&nbsp;</span></p>
-      </div>`;
+  <p style="font-size:13pt; margin:6pt 0 2pt 0;"><b>Câu ${stt}.</b></p>
+  <p style="font-size:13pt; margin:2pt 0;">${noiDung}</p>
+</div>`;
     });
 
     return `
-<p class="phan-header">PHẦN III. TRẢ LỜI NGẮN (${phanIII.length} câu)</p>
-<p class="phan-note">Thí sinh viết đáp án vào ô trống tương ứng.</p>
+<p style="font-size:13pt; font-weight:bold; margin-top:14pt; margin-bottom:2pt;">PHẦN III. Câu hỏi trắc nghiệm trả lời ngắn.</p>
+<p style="font-size:12pt; font-style:italic; margin:0 0 6pt 0;">Thí sinh trả lời từ câu 1 đến câu ${phanIII.length}</p>
 ${items.join('\n')}`;
   };
 
-  // ── Đáp án ──
+  // ── ĐÁP ÁN VÀ THANG ĐIỂM CHẤM ──
   const buildDapAn = () => {
-    // Phần I
-    const dapAnI = phanI.map((q, i) =>
-      `<td style="border:1pt solid #000; padding:2pt 4pt; text-align:center;">${i + 1}</td>` +
-      `<td style="border:1pt solid #000; padding:2pt 4pt; text-align:center; font-weight:bold;">${q.dapAn || 'A'}</td>`
+    // --- PHẦN I: Bảng ngang Câu 1..N / Đáp án ---
+    const headerCells_I = phanI.map((_, i) =>
+      `<td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-weight:bold; font-size:11pt;">Câu ${i + 1}</td>`
+    ).join('');
+    const answerCells_I = phanI.map(q =>
+      `<td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-weight:bold; font-size:11pt;">${q.dapAn || 'A'}</td>`
     ).join('');
 
-    // Phần II
-    const dapAnII = phanII.map((q, i) => {
-      const offset = phanI.length;
-      const stmts = (q.statements || []).map((s: any, li: number) =>
-        `${['a','b','c','d'][li]}) ${s.answer || '?'}`
-      ).join(', ');
-      return `<tr>
-        <td style="border:1pt solid #000; padding:2pt 4pt; text-align:center;">${offset + i + 1}</td>
-        <td style="border:1pt solid #000; padding:2pt 4pt; text-align:left; font-size:10pt;">${stmts}</td>
-      </tr>`;
-    }).join('');
+    const dapAnPhanI = phanI.length > 0 ? `
+<p style="font-size:13pt; font-weight:bold; margin-top:10pt;">PHẦN I</p>
+<p style="font-size:12pt; font-style:italic; margin:2pt 0 6pt 0;">(Mỗi câu trả lời đúng học sinh được <b>0,25 điểm</b>)</p>
+<table style="border-collapse:collapse; font-size:11pt; width:100%; margin-bottom:10pt;">
+  <tr>${headerCells_I}</tr>
+  <tr>${answerCells_I}</tr>
+</table>` : '';
 
-    // Phần III
-    const dapAnIII = phanIII.map((q, i) => {
-      const offset = phanI.length + phanII.length;
+    // --- PHẦN II: Bảng dọc Câu 1..N, mỗi câu có a)Đ/S, b)Đ/S, c)Đ/S, d)Đ/S ---
+    const dapAnPhanII_rows = phanII.map((q, i) => {
+      const stmts = q.statements || [];
+      const cells = stmts.map((s: any, li: number) => {
+        const label = ['a', 'b', 'c', 'd'][li];
+        const val = s.answer === 'Đúng' ? 'Đ' : 'S';
+        return `<td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-size:11pt;">${label}) ${val}</td>`;
+      }).join('');
       return `<tr>
-        <td style="border:1pt solid #000; padding:2pt 4pt; text-align:center;">${offset + i + 1}</td>
-        <td style="border:1pt solid #000; padding:2pt 4pt; font-size:10pt;">${renderMathSync(q.dapAn || '...')}</td>
-      </tr>`;
-    }).join('');
+  <td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-weight:bold; font-size:11pt;">Câu ${i + 1}</td>
+  ${cells}
+</tr>`;
+    }).join('\n');
+
+    // Header cho bảng DS: Câu | Câu 1 ... Câu N (cột cho mỗi ý)
+    const dsHeaderCols = phanII.length > 0
+      ? `<tr>
+  <td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-weight:bold; font-size:11pt; background:#D9D9D9;"></td>
+  ${phanII.map((_, i) => `<td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-weight:bold; font-size:11pt; background:#D9D9D9;" colspan="4">Câu ${i + 1}</td>`).join('')}
+</tr>` : '';
+
+    // Mỗi hàng = 1 ý (a/b/c/d), cột = câu
+    const dsAnswerRows: string[] = [];
+    if (phanII.length > 0) {
+      for (let li = 0; li < 4; li++) {
+        const label = ['a', 'b', 'c', 'd'][li];
+        const cells = phanII.map(q => {
+          const stmts = q.statements || [];
+          const s = stmts[li];
+          const val = s ? (s.answer === 'Đúng' ? 'Đ' : 'S') : '?';
+          return `<td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-size:11pt;">${val}</td>`;
+        }).join('');
+        dsAnswerRows.push(`<tr>
+  <td style="border:1pt solid #000; padding:2pt 5pt; font-size:11pt; font-weight:bold;">${label})</td>
+  ${cells}
+</tr>`);
+      }
+    }
+
+    // Build bảng DS theo layout: hàng = a/b/c/d, cột = Câu 1..N
+    const dsColHeaders = phanII.map((_, i) =>
+      `<td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-weight:bold; font-size:11pt; background:#D9D9D9;">Câu ${i + 1}</td>`
+    ).join('');
+
+    const dapAnPhanII = phanII.length > 0 ? `
+<p style="font-size:13pt; font-weight:bold; margin-top:12pt;">PHẦN II</p>
+<p style="font-size:12pt; margin:2pt 0;">Điểm tối đa của câu 01 của bài là <b>1 điểm</b>.</p>
+<p style="font-size:11pt; margin:1pt 0;">- Thí sinh chỉ lựa chọn chính xác 01 ý trong 1 câu hỏi được <b>0,1 điểm</b>.</p>
+<p style="font-size:11pt; margin:1pt 0;">- Thí sinh chỉ lựa chọn chính xác 02 ý trong 1 câu hỏi được <b>0,25 điểm</b>.</p>
+<p style="font-size:11pt; margin:1pt 0;">- Thí sinh chỉ lựa chọn chính xác 03 ý trong 1 câu hỏi được <b>0,5 điểm</b>.</p>
+<p style="font-size:11pt; margin:1pt 0 6pt 0;">- Thí sinh chỉ lựa chọn chính xác 04 ý trong 1 câu hỏi được <b>1 điểm</b>.</p>
+<table style="border-collapse:collapse; font-size:11pt; margin-bottom:10pt;">
+  <tr>
+    <td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-weight:bold; font-size:11pt; background:#D9D9D9;"></td>
+    ${dsColHeaders}
+  </tr>
+  ${dsAnswerRows.join('\n')}
+</table>` : '';
+
+    // --- PHẦN III: Bảng ngang Câu 1..N / Đáp án ---
+    const headerCells_III = phanIII.map((_, i) =>
+      `<td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-weight:bold; font-size:11pt;">Câu ${i + 1}</td>`
+    ).join('');
+    const answerCells_III = phanIII.map(q =>
+      `<td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-size:11pt;">${renderMathSync(q.dapAn || '...')}</td>`
+    ).join('');
+
+    const dapAnPhanIII = phanIII.length > 0 ? `
+<p style="font-size:13pt; font-weight:bold; margin-top:12pt;">PHẦN III</p>
+<p style="font-size:12pt; font-style:italic; margin:2pt 0 6pt 0;">(Mỗi câu trả lời đúng học sinh được <b>0,5 điểm</b>)</p>
+<table style="border-collapse:collapse; font-size:11pt; width:auto; margin-bottom:10pt;">
+  <tr>
+    <td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-weight:bold; font-size:11pt; background:#D9D9D9;"></td>
+    ${headerCells_III}
+  </tr>
+  <tr>
+    <td style="border:1pt solid #000; padding:2pt 5pt; text-align:center; font-weight:bold; font-size:11pt;">Chọn</td>
+    ${answerCells_III}
+  </tr>
+</table>` : '';
 
     return `
-<div class="dap-an-section" style="page-break-before: always;">
-  <h2 style="text-align:center; margin-bottom:8pt;">ĐÁP ÁN — MÃ ĐỀ ${maDeThiNum}</h2>
-  
-  <p><strong>Phần I. Trắc nghiệm nhiều phương án:</strong></p>
-  <table style="border-collapse:collapse; font-size:11pt; margin-bottom:8pt;">
-    <tr>${dapAnI}</tr>
-  </table>
-
-  <p style="margin-top:8pt;"><strong>Phần II. Đúng/Sai:</strong></p>
-  <table style="border-collapse:collapse; width:60%; font-size:11pt; margin-bottom:8pt;">
-    <tr>
-      <th style="border:1pt solid #000; padding:2pt 8pt; background:#D9D9D9;">Câu</th>
-      <th style="border:1pt solid #000; padding:2pt 8pt; background:#D9D9D9;">Đáp án (a, b, c, d)</th>
-    </tr>
-    ${dapAnII}
-  </table>
-
-  <p style="margin-top:8pt;"><strong>Phần III. Trả lời ngắn:</strong></p>
-  <table style="border-collapse:collapse; width:60%; font-size:11pt;">
-    <tr>
-      <th style="border:1pt solid #000; padding:2pt 8pt; background:#D9D9D9;">Câu</th>
-      <th style="border:1pt solid #000; padding:2pt 8pt; background:#D9D9D9;">Đáp án</th>
-    </tr>
-    ${dapAnIII}
-  </table>
+<div style="page-break-before:always; margin-top:20pt; padding-top:10pt;">
+  <p style="text-align:center; font-size:14pt; font-weight:bold; margin:10pt 0 16pt 0;">ĐÁP ÁN VÀ THANG ĐIỂM CHẤM</p>
+  ${dapAnPhanI}
+  ${dapAnPhanII}
+  ${dapAnPhanIII}
 </div>`;
   };
 
+  // ── BODY CHÍNH ──
   const body = `
-<div class="exam-header">
-  <table style="width:100%; border:none; font-size:12pt;">
+<div style="text-align:center; margin-bottom:10pt;">
+  <p style="font-size:14pt; font-weight:bold; margin:0;">MÔN TOÁN - Lớp ${lop}</p>
+  <p style="font-size:12pt; font-style:italic; margin:2pt 0;">Thời gian làm bài: ${thoiGian} phút</p>
+  <p style="font-size:11pt; font-style:italic; margin:0 0 6pt 0;">(không kể thời gian phát đề)</p>
+  <p style="font-size:11pt; font-style:italic; margin:0 0 8pt 0;">(Đề thi có ${totalPages} trang)</p>
+  <table style="margin:0 auto; border-collapse:collapse;">
     <tr>
-      <td style="border:none; text-align:left; width:50%; vertical-align:top;">
-        <strong>${truong.toUpperCase()}</strong><br>
-        <strong>Tổ: Toán</strong>
-      </td>
-      <td style="border:none; text-align:right; width:50%; vertical-align:top;">
-        <strong>MÃ ĐỀ: ${maDeThiNum}</strong>
-      </td>
-    </tr>
-  </table>
-
-  <div class="line"></div>
-
-  <h1>ĐỀ KIỂM TRA</h1>
-  <h2>MÔN: ${monHoc.toUpperCase()} — LỚP ${lop}</h2>
-  <p class="info">
-    Thời gian làm bài: <strong>${thoiGian} phút</strong> 
-    (không kể thời gian phát đề)
-  </p>
-  <p class="info" style="font-style:italic;">
-    Thí sinh không được sử dụng tài liệu. Giám thị không giải thích gì thêm.
-  </p>
-
-  <div class="line"></div>
-
-  <table style="width:100%; border:1pt solid #000; border-collapse:collapse; margin-top:6pt; font-size:12pt;">
-    <tr>
-      <td style="border:1pt solid #000; padding:4pt 8pt; text-align:center; width:50%;">
-        <strong>Họ và tên:</strong> ........................................................................
-      </td>
-      <td style="border:1pt solid #000; padding:4pt 8pt; text-align:center; width:25%;">
-        <strong>Số báo danh:</strong> ......................
-      </td>
-      <td style="border:1pt solid #000; padding:4pt 8pt; text-align:center; width:25%;">
-        <strong>Lớp:</strong> ......................
+      <td style="border:2pt solid #000; padding:4pt 20pt; text-align:center; font-size:14pt; font-weight:bold;">
+        Mã đề ${maDeThiNum}
       </td>
     </tr>
   </table>
 </div>
 
+<p style="font-size:13pt; margin:10pt 0 14pt 0;">
+  Họ và tên học sinh: .......................................................................................... Số báo danh: ..........................
+</p>
+
 ${buildPhanI()}
+
 ${buildPhanII()}
+
 ${buildPhanIII()}
 
-<p class="footer-end">— HẾT —</p>
-<p style="text-align:center; font-size:11pt; font-style:italic;">
-  (Đề thi gồm ${exam.length} câu hỏi trên ${Math.ceil(exam.length / 15)} trang)
+<p style="text-align:center; font-size:13pt; font-weight:bold; font-style:italic; margin-top:20pt; margin-bottom:0;">
+  -------------------- HẾT --------------------
 </p>
 
 ${buildDapAn()}`;
